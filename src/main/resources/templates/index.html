@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="games" type="java.util.Collection<cringe.app.db.Game>"*/-->
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<b>Games:</b>
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="game : ${ games }">
+        <td th:text="${game.title}">Doom</td>
+        <td><a th:attr="href=${'/play/' + game.id}">Play</a></td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="/game/new">New game</a>
+</body>
+</html>
