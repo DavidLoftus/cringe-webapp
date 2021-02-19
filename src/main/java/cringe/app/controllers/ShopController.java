@@ -1,4 +1,4 @@
-package cringe.app;
+package cringe.app.controllers;
 
 import cringe.app.db.Artifact;
 import cringe.app.db.ArtifactRepository;
@@ -20,7 +20,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 
 @Controller
 public class ShopController {

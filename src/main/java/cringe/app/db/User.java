@@ -1,6 +1,7 @@
 package cringe.app.db;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name="users")
@@ -12,8 +13,12 @@ public class User {
 
     @Column(nullable = false) private String username;
     @Column(nullable = false) private String password;
+    @Transient private String passwordConfirm;
     @Column(nullable = false) private String fullName;
     @Column(nullable = false) private String email;
+
+    @ManyToMany
+    private Set<Role> roles;
 
     public int getId() {
         return id;
@@ -39,6 +44,14 @@ public class User {
         this.password = passwordHash;
     }
 
+    public String getPasswordConfirm() {
+        return passwordConfirm;
+    }
+
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
+    }
+
     public String getFullName() {
         return fullName;
     }
@@ -55,4 +68,11 @@ public class User {
         this.email = email;
     }
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 }
