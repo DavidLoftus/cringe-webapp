@@ -28,7 +28,7 @@
     var dosbox = new Dosbox({
         id: "dosbox",
         onload: function (dosbox) {
-            dosbox.run(/*[[${ game.artifact.artifactPath }]]*/ '/artifact/-1/doom.zip', "./DOOM/DOOM.EXE");
+            dosbox.run(/*[[${ game.artifact.artifactPath }]]*/ '/artifact/-1/doom.zip', /*[[${ game.startPath }]]*/ "./DOOM/DOOM.EXE");
         },
         onrun: function (dosbox, app) {
             console.log("App '" + app + "' is runned");
