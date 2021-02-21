@@ -24,7 +24,7 @@
     <tbody>
     <tr th:each="game : ${ games }">
         <td th:text="${game.title}">Doom</td>
-        <td><a th:attr="href=${'/play/' + game.id}">Play</a></td>
+        <td><a th:attr="href=${'/play/' + game.id}"><img th:src="${game.icon.getArtifactPath()}"></a></td>
     </tr>
     </tbody>
 </table>

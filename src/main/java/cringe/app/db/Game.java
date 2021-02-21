@@ -16,6 +16,9 @@ public class Game {
     @OneToOne
     private Artifact artifact;
 
+    @OneToOne
+    private Artifact icon;
+
     public int getId() {
         return id;
     }
@@ -38,5 +41,13 @@ public class Game {
 
     public void setArtifact(Artifact publicRelease) {
         this.artifact = publicRelease;
+    }
+
+    public Artifact getIcon() {
+        return icon;
+    }
+
+    public void setIcon(Artifact icon) {
+        this.icon = icon;
     }
 }
