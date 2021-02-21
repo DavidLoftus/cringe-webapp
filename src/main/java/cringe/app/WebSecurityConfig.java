@@ -27,19 +27,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
+                .csrf()
+                    .disable()
+                .headers()
+                    .frameOptions().sameOrigin()
+                .and()
                 .authorizeRequests()
-                .antMatchers("/register").permitAll()
-                // Would be useful for allowing our css and js to be loaded for non-logged in users.
-                // .antMatchers("/css/**", "/js/**", "/registration").permitAll()
-                .anyRequest().authenticated()
+                    .antMatchers("/register").permitAll()
+                    // Would be useful for allowing our css and js to be loaded for non-logged in users.
+                    // .antMatchers("/css/**", "/js/**", "/registration").permitAll()
+                    .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/login")
-                .permitAll()
+                    .loginPage("/login").permitAll()
                 .and()
                 .logout()
-                .permitAll();
+                    .permitAll();
     }
 
     @Bean

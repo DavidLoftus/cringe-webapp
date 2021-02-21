@@ -19,9 +19,6 @@ public class Game {
     @OneToOne
     private Artifact icon;
 
-    @Column
-    private String startPath;
-
     public int getId() {
         return id;
     }
@@ -52,13 +49,5 @@ public class Game {
 
     public void setIcon(Artifact icon) {
         this.icon = icon;
-    }
-
-    public String getStartPath() {
-        return startPath;
-    }
-
-    public void setStartPath(String startPath) {
-        this.startPath = startPath;
     }
 }
