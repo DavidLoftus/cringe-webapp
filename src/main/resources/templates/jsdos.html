@@ -6,90 +6,26 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>DOOM</title>
     <style type="text/css" th:inline="text">
-        html, body, #root {
-            width: 90%;
-            height: 90%;
+        html, body, #jsdos {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
         }
     </style>
-    <script src="/js/js-dos/emulators.js"></script>
-    <script src="/js/js-dos/emulators-ui.js"></script>
+    <script src="/js/js-dos/js-dos.js"></script>
     <link href="/css/js-dos.css" rel="stylesheet">
 </head>
 <body>
 
-<div class="layout">
-    <div class="controls">
-        <button onclick="start()">Start</button>
-        <button onclick="stop()">Stop</button>
-        <select id="impl-select">
-            <option value="dos-worker" selected>dos worker</option>
-            <option value="dos-direct">dos direct</option>
-        </select>
-    </div>
-    <div id="root"></div>
-</div>
+<div id="jsdos"></div>
 
 <script th:inline="javascript">
+    /*<![CDATA[*/
     emulators.pathPrefix = "/js/js-dos/";
-
-    let ciPromise = null;
-    const layers = emulatorsUi.dom.layers(document.getElementById("root"));
-
-    async function start() {
-        /*<![CDATA[*/
-        stop();
-
-        layers.showLoadingLayer();
-
-        const implName = document.getElementById("impl-select").value;
-        const bundleUrl = /*[[${ game.artifact.artifactPath }]]*/ '/artifact/-1/doom.jsdos';
-        const bundle = await emulatorsUi.network.resolveBundle(bundleUrl);
-
-        if (implName === "dos-worker") {
-            ciPromise = emulators.dosWorker(bundle);
-        } else {
-            ciPromise = emulators.dosDirect(bundle);
-        }
-
-        ciPromise.then((ci) => {
-            const mapper = {
-                88/*KBD_x*/: 290 /*KBD_f1*/,
-            };
-
-            const mapping = [
-                { joystickId: 0, event: "dir:up", mapTo: 265 /*KBD_up*/ },
-                { joystickId: 0, event: "dir:down", mapTo: 264 /*KBD_down*/ },
-                { joystickId: 0, event: "dir:left", mapTo: 263 /*KBD_left*/ },
-                { joystickId: 0, event: "dir:right", mapTo: 262 /*KBD_right*/ },
-                { joystickId: 0, event: "tap", mapTo: 290 /*KBD_f1*/ },
-                { joystickId: 1, event: "tap", mapTo: 290 /*KBD_f1*/ },
-            ];
-
-            const buttons = [
-                {
-                    action: "click",
-                    mapTo: 88 /*KBD_x*/,
-                    position: {
-                        left: 1,
-                        bottom: 1,
-                    }
-                },
-            ];
-
-            emulatorsUi.graphics.webGl(layers, ci);
-            emulatorsUi.sound.audioNode(ci);
-            emulatorsUi.controls.keyboard(layers, ci, mapper);
-            emulatorsUi.controls.button(layers, ci, buttons);
-            emulatorsUi.controls.options(layers, ci, [], () => {/**/});
-            layers.hideLoadingLayer();
-        });
-    }
-
-    function stop() {
-        if (ciPromise !== null) {
-            ciPromise.then((ci) => ci.exit());
-        }
-    }
+    Dos(document.getElementById("jsdos"))
+        .run(/*[[${ game.artifact.artifactPath }]]*/ '/artifact/-1/doom.jsdos');
+    /*]]>*/
 </script>
 </body>
 </html>
