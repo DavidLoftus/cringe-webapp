@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.sql.Blob;
 
 @Entity
-@Table(name="releases")
+@Table(name="artifacts")
 public class Artifact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,9 +54,5 @@ public class Artifact {
 
     public void setContentType(String fileInfo) {
         this.contentType = fileInfo;
-    }
-
-    public String getArtifactPath() {
-        return String.format("/artifact/%d/%s", this.getId(), this.getFileName());
     }
 }

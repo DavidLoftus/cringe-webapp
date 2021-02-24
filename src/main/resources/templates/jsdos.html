@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>DOOM</title>
+    <title th:text="${game.title}">DOOM</title>
     <style type="text/css" th:inline="text">
         html, body, #jsdos {
             width: 100%;
@@ -24,7 +24,7 @@
     /*<![CDATA[*/
     emulators.pathPrefix = "/js/js-dos/";
     Dos(document.getElementById("jsdos"))
-        .run(/*[[${ game.artifact.artifactPath }]]*/ '/artifact/-1/doom.jsdos');
+        .run(/*[[${ #paths.get(game.artifact) }]]*/ '/artifact/-1/doom.jsdos');
     /*]]>*/
 </script>
 </body>

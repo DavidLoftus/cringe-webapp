@@ -1,4 +1,4 @@
-package cringe.app;
+package cringe.app.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
