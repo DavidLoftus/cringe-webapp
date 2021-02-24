@@ -56,7 +56,30 @@ public class ShopController {
                 .body(resource);
     }
 
-    @GetMapping("/play/{id}")
+    @GetMapping("/game/{id}")
+    public String viewGame(@PathVariable int id, Model model) {
+        Game game = gameRepository.findGameById(id);
+        if (game == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        model.addAttribute("game", game);
+        model.addAttribute("owns_game", true);
+        return "view_game";
+    }
+
+    @GetMapping("/game/{id}/buy")
+    public String buyGame(@PathVariable int id, Model model) {
+        Game game = gameRepository.findGameById(id);
+        if (game == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        model.addAttribute("game", game);
+        return "buy_game";
+    }
+
+    @GetMapping("/game/{id}/play")
     public String playGame(@PathVariable int id, Model model) {
         Game game = gameRepository.findGameById(id);
         if (game == null) {

@@ -19,6 +19,12 @@ public class Game {
     @OneToOne
     private Artifact icon;
 
+    @Column
+    private Float price;
+
+    @Column
+    private String description;
+
     public int getId() {
         return id;
     }
@@ -39,8 +45,8 @@ public class Game {
         return artifact;
     }
 
-    public void setArtifact(Artifact publicRelease) {
-        this.artifact = publicRelease;
+    public void setArtifact(Artifact artifact) {
+        this.artifact = artifact;
     }
 
     public Artifact getIcon() {
@@ -49,5 +55,21 @@ public class Game {
 
     public void setIcon(Artifact icon) {
         this.icon = icon;
+    }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
