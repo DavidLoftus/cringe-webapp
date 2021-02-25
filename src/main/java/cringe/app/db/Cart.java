@@ -1,7 +1,5 @@
 package cringe.app.db;
 
-import org.hibernate.annotations.Formula;
-
 import javax.persistence.*;
 import java.util.List;
 

@@ -19,6 +19,7 @@ import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
 import java.security.Principal;
 import java.sql.SQLException;
+import java.util.Optional;
 
 @Controller
 public class ShopController {
@@ -51,6 +52,26 @@ public class ShopController {
         return "cart";
     }
 
+    @PostMapping("/cart/add")
+    public RedirectView addToCart(Principal principal, @RequestParam int id) {
+        User user = userRepository.findByUsername(principal.getName());
+
+        Optional<Game> maybeGame = gameRepository.findById(id);
+
+        if (maybeGame.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        Game game = maybeGame.get();
+        Cart cart = user.getCart();
+        if (!cart.getGames().contains(game)) {
+            cart.getGames().add(game);
+            cartRepository.save(cart);
+        }
+
+        return new RedirectView("/cart");
+    }
+
     @GetMapping("/game/new")
     public String newGame() {
         return "new_game";
@@ -79,7 +100,7 @@ public class ShopController {
         }
 
         model.addAttribute("game", game);
-        model.addAttribute("owns_game", true);
+        model.addAttribute("owns_game", false);
         return "view_game";
     }
 
