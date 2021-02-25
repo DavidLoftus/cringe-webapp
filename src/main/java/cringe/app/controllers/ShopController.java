@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
+import java.security.Principal;
 import java.sql.SQLException;
 
 @Controller
@@ -40,9 +42,8 @@ public class ShopController {
     }
 
     @GetMapping("/cart")
-    public String viewCart(Model model) {
-        // TODO: figure out how to get current user
-        User user = userRepository.findByUsername("sa");
+    public String viewCart(Principal principal, Model model) {
+        User user = userRepository.findByUsername(principal.getName());
 
         model.addAttribute("user", user);
         model.addAttribute("totalCost", cartRepository.getTotalCost(user.getCart().getId()));
