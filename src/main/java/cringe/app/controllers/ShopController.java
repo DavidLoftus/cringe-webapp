@@ -1,9 +1,6 @@
 package cringe.app.controllers;
 
-import cringe.app.db.Artifact;
-import cringe.app.db.ArtifactRepository;
-import cringe.app.db.Game;
-import cringe.app.db.GameRepository;
+import cringe.app.db.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -30,10 +27,27 @@ public class ShopController {
     @Autowired
     public GameRepository gameRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private CartRepository cartRepository;
+
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("games", gameRepository.findAll());
         return "index";
+    }
+
+    @GetMapping("/cart")
+    public String viewCart(Model model) {
+        // TODO: figure out how to get current user
+        User user = userRepository.findByUsername("sa");
+
+        model.addAttribute("user", user);
+        model.addAttribute("totalCost", cartRepository.getTotalCost(user.getCart().getId()));
+
+        return "cart";
     }
 
     @GetMapping("/game/new")

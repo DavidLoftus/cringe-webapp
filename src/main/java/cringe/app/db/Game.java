@@ -13,10 +13,10 @@ public class Game {
     @Column(nullable = false)
     private String title;
 
-    @OneToOne
+    @OneToOne(orphanRemoval = true)
     private Artifact artifact;
 
-    @OneToOne
+    @OneToOne(orphanRemoval = true)
     private Artifact icon;
 
     @Column

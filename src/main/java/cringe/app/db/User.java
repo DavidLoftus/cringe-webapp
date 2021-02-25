@@ -11,11 +11,23 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false) private String username;
-    @Column(nullable = false) private String password;
-    @Transient private String passwordConfirm;
-    @Column(nullable = false) private String fullName;
-    @Column(nullable = false) private String email;
+    @Column(nullable = false)
+    private String username;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Transient
+    private String passwordConfirm;
+
+    @Column(nullable = false)
+    private String fullName;
+
+    @Column(nullable = false)
+    private String email;
+
+    @OneToOne
+    private Cart cart;
 
     @ManyToMany
     private Set<Role> roles;
@@ -74,5 +86,13 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 }

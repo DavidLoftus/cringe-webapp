@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<!--/*@thymesVar id="user" type="cringe.app.db.User"*/-->
+<!--/*@thymesVar id="totalCost" type="java.lang.Float"*/-->
+<head>
+    <meta charset="UTF-8">
+    <title>Cart</title>
+</head>
+<body>
+<b>Games:</b>
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Price (€)</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="game : ${ user.cart.games }">
+        <td><a th:text="${game.title}" th:attr="href=${#paths.view(game)}">Doom</a></td>
+        <td th:text="${#numbers.formatDecimal(game.price, 0, 'COMMA', 2, 'POINT')}"></td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+        <th id="total">Total :</th>
+        <td th:text="${#numbers.formatDecimal(totalCost, 0, 'COMMA', 2, 'POINT')}"></td>
+    </tr>
+    </tfoot>
+</table>
+</body>
+</html>
