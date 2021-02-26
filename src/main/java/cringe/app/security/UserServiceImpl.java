@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.HashSet;
 
 @Service
@@ -26,7 +27,18 @@ public class UserServiceImpl implements UserService {
         cartRepository.save(c);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         // Can add functionality for admins here
-        user.setRoles(new HashSet<>(roleRepository.findAll())); // Change appropriately for regular users and admins
+        if(roleRepository.findAll().size() == 0) {
+            Role role_admin = new Role();
+            role_admin.setName("admin");
+            role_admin.setUsers(new HashSet<>());
+            roleRepository.save(role_admin);
+
+            Role role_user = new Role();
+            role_user.setName("user");
+            role_user.setUsers(new HashSet<>());
+            roleRepository.save(role_user);
+        }
+        user.setRoles(new HashSet<>(roleRepository.findAllById(Collections.singleton((long) 2))));
         userRepository.save(user);
     }
 

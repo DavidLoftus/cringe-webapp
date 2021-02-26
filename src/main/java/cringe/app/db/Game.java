@@ -1,6 +1,7 @@
 package cringe.app.db;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "games")
@@ -18,6 +19,9 @@ public class Game {
 
     @OneToOne(orphanRemoval = true)
     private Artifact icon;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<User> users;
 
     @Column
     private Float price;
@@ -55,6 +59,14 @@ public class Game {
 
     public void setIcon(Artifact icon) {
         this.icon = icon;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
     public float getPrice() {

@@ -7,6 +7,8 @@ import java.util.Set;
 @Table(name="users")
 public class User {
 
+    // TODO: Add games_owned to the user.
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -31,6 +33,9 @@ public class User {
 
     @ManyToMany
     private Set<Role> roles;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<Game> games;
 
     public int getId() {
         return id;
@@ -94,5 +99,13 @@ public class User {
 
     public void setCart(Cart cart) {
         this.cart = cart;
+    }
+
+    public Set<Game> getGames() {
+        return games;
+    }
+
+    public void setGames(Set<Game> games) {
+        this.games = games;
     }
 }
