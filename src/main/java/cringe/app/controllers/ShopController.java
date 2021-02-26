@@ -46,6 +46,7 @@ public class ShopController {
     public String viewCart(Principal principal, Model model) {
         User user = userRepository.findByUsername(principal.getName());
 
+        System.out.println(user.getCart());
         model.addAttribute("user", user);
         model.addAttribute("totalCost", cartRepository.getTotalCost(user.getCart().getId()));
 

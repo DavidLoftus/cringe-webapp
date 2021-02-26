@@ -1,8 +1,6 @@
 package cringe.app.security;
 
-import cringe.app.db.RoleRepository;
-import cringe.app.db.User;
-import cringe.app.db.UserRepository;
+import cringe.app.db.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,12 +14,18 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
+    private CartRepository cartRepository;
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public void save(User user) {
-        // Can add functionality for admins here
+        // Added empty cart to user
+        Cart c = new Cart();
+        user.setCart(c);
+        cartRepository.save(c);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        // Can add functionality for admins here
         user.setRoles(new HashSet<>(roleRepository.findAll())); // Change appropriately for regular users and admins
         userRepository.save(user);
     }

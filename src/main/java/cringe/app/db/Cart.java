@@ -1,6 +1,7 @@
 package cringe.app.db;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,6 +14,10 @@ public class Cart {
 
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Game> games;
+
+    public Cart() {
+        this.games = new ArrayList<>();
+    }
 
     public int getId() {
         return id;
