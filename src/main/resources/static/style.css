@@ -49,6 +49,40 @@ body{
 	float: left;
 	margin: 4px 4px;
 	z-index: 402;
+	background-size: 100%;
+	cursor: pointer;
+}
+
+.game-bottom-bar {
+	height: 20%;
+	background-color: #2a475e;
+	opacity: 97.5%;
+	position: absolute;
+	width: 100%;
+	bottom: 0;
+
+	display: flex;
+	justify-content: center;
+	align-content: center;
+	flex-direction: row;
+
+	font-size: 20pt;
+	line-height: 45pt;
+}
+
+.game:hover .game-bottom-bar {
+	background-color: #1b2838;
+}
+
+.game-title-column {
+	width: 70%;
+}
+
+.game-price-column {
+	background-color: cyan;
+	width: 30%;
+	text-align: center;
+	opacity: 50%;
 }
 
 .navbarContent {
