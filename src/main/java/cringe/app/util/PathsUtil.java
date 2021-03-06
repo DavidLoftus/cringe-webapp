@@ -16,6 +16,10 @@ public class PathsUtil {
         return String.format("/game/%d", game.getId());
     }
 
+    public String edit(Game game) {
+        return String.format("/admin/game/%d", game.getId());
+    }
+
     public String get(Artifact artifact) {
         return String.format("/artifact/%d/%s", artifact.getId(), artifact.getFileName());
     }

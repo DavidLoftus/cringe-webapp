@@ -42,11 +42,6 @@ public class ShopController {
         return "index";
     }
 
-    @GetMapping("/game/new")
-    public String newGame() {
-        return "new_game";
-    }
-
     @GetMapping("/artifact/{id}/**")
     @ResponseBody
     public ResponseEntity<Resource> getArtifact(@PathVariable int id) throws SQLException {
@@ -94,21 +89,5 @@ public class ShopController {
 
         model.addAttribute("game", game);
         return "jsdos";
-    }
-
-    @PostMapping("/upload")
-    public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) throws IOException, SQLException {
-        Artifact artifact = new Artifact();
-        artifact.setData(new SerialBlob(file.getBytes()));
-        artifact.setFileName(file.getOriginalFilename());
-        artifact.setContentType(file.getContentType());
-        artifact = artifactRepository.save(artifact);
-
-        Game game = new Game();
-        game.setTitle("idk tbh");
-        game.setArtifact(artifact);
-        game = gameRepository.save(game);
-
-        return "redirect:/play/" + game.getId();
     }
 }
