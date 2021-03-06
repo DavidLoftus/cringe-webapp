@@ -73,6 +73,24 @@ public class ShopController {
         return new RedirectView("/cart");
     }
 
+    @PostMapping("/cart/remove")
+    @ResponseStatus(value = HttpStatus.OK)
+    public void removeFromCart(Principal principal, @RequestParam int id) {
+        User user = userRepository.findByUsername(principal.getName());
+
+        Optional<Game> maybeGame = gameRepository.findById(id);
+
+        if (maybeGame.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        Game game = maybeGame.get();
+        Cart cart = user.getCart();
+        if (cart.getGames().remove(game)) {
+            cartRepository.save(cart);
+        }
+    }
+
     @GetMapping("/game/new")
     public String newGame() {
         return "new_game";

@@ -5,6 +5,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Cart</title>
+    <script>
+        function removeFromCart(id) {
+            fetch('/cart/remove', {
+                method: 'POST',
+                body: new URLSearchParams({
+                    id: id,
+                })
+            }).then( resp => {
+                if (resp.ok) {
+                    const row = document.getElementById('game_row_' + id);
+                    row.remove();
+                }
+            })
+        }
+    </script>
 </head>
 <body>
 <b>Games:</b>
@@ -16,9 +31,12 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="game : ${ user.cart.games }">
+    <tr th:id="|game_row_${game.id}|" th:each="game : ${ user.cart.games }">
         <td><a th:text="${game.title}" th:attr="href=${#paths.view(game)}">Doom</a></td>
         <td th:text="${#numbers.formatDecimal(game.price, 0, 'COMMA', 2, 'POINT')}"></td>
+        <td>
+            <button th:onclick="|removeFromCart(${ game.id })|"></button>
+        </td>
     </tr>
     </tbody>
     <tfoot>
