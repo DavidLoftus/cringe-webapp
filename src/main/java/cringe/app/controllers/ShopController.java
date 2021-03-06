@@ -42,55 +42,6 @@ public class ShopController {
         return "index";
     }
 
-    @GetMapping("/cart")
-    public String viewCart(Principal principal, Model model) {
-        User user = userRepository.findByUsername(principal.getName());
-
-        System.out.println(user.getCart());
-        model.addAttribute("user", user);
-        model.addAttribute("totalCost", cartRepository.getTotalCost(user.getCart().getId()));
-
-        return "cart";
-    }
-
-    @PostMapping("/cart/add")
-    public RedirectView addToCart(Principal principal, @RequestParam int id) {
-        User user = userRepository.findByUsername(principal.getName());
-
-        Optional<Game> maybeGame = gameRepository.findById(id);
-
-        if (maybeGame.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
-
-        Game game = maybeGame.get();
-        Cart cart = user.getCart();
-        if (!cart.getGames().contains(game)) {
-            cart.getGames().add(game);
-            cartRepository.save(cart);
-        }
-
-        return new RedirectView("/cart");
-    }
-
-    @PostMapping("/cart/remove")
-    @ResponseStatus(value = HttpStatus.OK)
-    public void removeFromCart(Principal principal, @RequestParam int id) {
-        User user = userRepository.findByUsername(principal.getName());
-
-        Optional<Game> maybeGame = gameRepository.findById(id);
-
-        if (maybeGame.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
-
-        Game game = maybeGame.get();
-        Cart cart = user.getCart();
-        if (cart.getGames().remove(game)) {
-            cartRepository.save(cart);
-        }
-    }
-
     @GetMapping("/game/new")
     public String newGame() {
         return "new_game";
