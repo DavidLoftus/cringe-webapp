@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<!--/*@thymesVar id="games" type="java.util.Collection<cringe.app.db.Game>"*/-->
+<head>
+    <meta charset="UTF-8">
+    <title>Cringe Admin Portal</title>
+</head>
+<body>
+
+<b>
+    Games:
+</b>
+<ul>
+    <li th:each="game : ${ games }">
+        <a th:value="${game.title}" th:href="${#paths.edit(game)}">Some game</a>
+    </li>
+</ul>
+
+<b>
+    Add new game:
+</b>
+<form action="/admin/new_game" method="post">
+    <label>
+        Title:
+        <input type="text" name="title">
+    </label>
+    <label>
+        <input type="submit">
+    </label>
+</form>
+</body>
+</html>

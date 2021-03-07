@@ -33,9 +33,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .frameOptions().sameOrigin()
                 .and()
                 .authorizeRequests()
-                    .antMatchers("/register").permitAll()
+                    .antMatchers("/register", "/", "/game/*").permitAll()
+                    .antMatchers("/artifact/**").permitAll()
                     // Would be useful for allowing our css and js to be loaded for non-logged in users.
-                    // .antMatchers("/css/**", "/js/**", "/registration").permitAll()
+                    .antMatchers("/css/**", "/js/**", "/images/**").permitAll()
+                    .antMatchers("/admin/**").hasAuthority("admin")
                     .anyRequest().authenticated()
                 .and()
                 .formLogin()

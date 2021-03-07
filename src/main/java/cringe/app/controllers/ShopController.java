@@ -47,6 +47,7 @@ public class ShopController {
         return "index";
     }
 
+<<<<<<< HEAD
     @GetMapping("/cart")
     public String viewCart(Principal principal, Model model) {
         User user = userRepository.findByUsername(principal.getName());
@@ -143,6 +144,8 @@ public class ShopController {
         return "new_game";
     }
 
+=======
+>>>>>>> 55337c816ce76d823e9a47841c9889e5fdf3cec7
     @GetMapping("/artifact/{id}/**")
     @ResponseBody
     public ResponseEntity<Resource> getArtifact(@PathVariable int id) throws SQLException {
@@ -195,21 +198,5 @@ public class ShopController {
 
         model.addAttribute("game", game);
         return "jsdos";
-    }
-
-    @PostMapping("/upload")
-    public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) throws IOException, SQLException {
-        Artifact artifact = new Artifact();
-        artifact.setData(new SerialBlob(file.getBytes()));
-        artifact.setFileName(file.getOriginalFilename());
-        artifact.setContentType(file.getContentType());
-        artifact = artifactRepository.save(artifact);
-
-        Game game = new Game();
-        game.setTitle("idk tbh");
-        game.setArtifact(artifact);
-        game = gameRepository.save(game);
-
-        return "redirect:/play/" + game.getId();
     }
 }

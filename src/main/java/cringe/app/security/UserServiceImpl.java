@@ -1,12 +1,16 @@
 package cringe.app.security;
 
+import cringe.app.config.CringeConfig;
 import cringe.app.db.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -19,6 +23,47 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    private CringeConfig config;
+
+    @PostConstruct
+    private void init() {
+        // Can add functionality for admins here
+        if(roleRepository.findAll().size() == 0) {
+            Role role_admin = new Role();
+            role_admin.setName("admin");
+            role_admin.setUsers(Collections.emptySet());
+            roleRepository.save(role_admin);
+
+            Role role_user = new Role();
+            role_user.setName("user");
+            role_user.setUsers(Collections.emptySet());
+            roleRepository.save(role_user);
+        }
+
+        if (config.isRootEnabled()) {
+            User rootUser = userRepository.findByUsername(config.getRootUsername());
+            if (rootUser == null) {
+                User newUser = new User();
+                newUser.setUsername(config.getRootUsername());
+                newUser.setPassword(config.getRootPassword());
+                save(newUser);
+
+                rootUser = userRepository.findByUsername(config.getRootUsername());
+            }
+
+            if (!rootUser.hasRole("admin")) {
+                rootUser.getRoles().add(roleRepository.getRoleByName("admin"));
+                userRepository.save(rootUser);
+            }
+        }
+
+    }
+
+    private Set<Role> defaultRoles() {
+        return Set.of(roleRepository.getRoleByName("user"));
+    }
+
     @Override
     public void save(User user) {
         // Added empty cart to user
@@ -26,19 +71,7 @@ public class UserServiceImpl implements UserService {
         user.setCart(c);
         cartRepository.save(c);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        // Can add functionality for admins here
-        if(roleRepository.findAll().size() == 0) {
-            Role role_admin = new Role();
-            role_admin.setName("admin");
-            role_admin.setUsers(new HashSet<>());
-            roleRepository.save(role_admin);
-
-            Role role_user = new Role();
-            role_user.setName("user");
-            role_user.setUsers(new HashSet<>());
-            roleRepository.save(role_user);
-        }
-        user.setRoles(new HashSet<>(roleRepository.findAllById(Collections.singleton((long) 2))));
+        user.setRoles(defaultRoles());
         userRepository.save(user);
     }
 
