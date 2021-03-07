@@ -22,16 +22,16 @@ public class User {
     @Transient
     private String passwordConfirm;
 
-    @Column(nullable = false)
+    @Column
     private String fullName;
 
-    @Column(nullable = false)
+    @Column
     private String email;
 
     @OneToOne
     private Cart cart;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -107,5 +107,14 @@ public class User {
 
     public void setGames(Set<Game> games) {
         this.games = games;
+    }
+
+    public boolean hasRole(String roleName) {
+        for (Role role : getRoles()) {
+            if (role.getName().equalsIgnoreCase(roleName)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
