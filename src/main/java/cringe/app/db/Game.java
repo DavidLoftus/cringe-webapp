@@ -84,4 +84,8 @@ public class Game {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public String toString() {
+        return getTitle();
+    }
 }

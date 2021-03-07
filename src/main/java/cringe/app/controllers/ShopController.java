@@ -19,7 +19,9 @@ import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
 import java.security.Principal;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Optional;
+import java.util.Set;
 
 @Controller
 public class ShopController {
@@ -36,6 +38,9 @@ public class ShopController {
     @Autowired
     private CartRepository cartRepository;
 
+    @Autowired
+    private OrderRepository orderRepository;
+
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("games", gameRepository.findAll());
@@ -46,7 +51,14 @@ public class ShopController {
     public String viewCart(Principal principal, Model model) {
         User user = userRepository.findByUsername(principal.getName());
 
-        System.out.println(user.getCart());
+        // TODO: Remove this once we have a default admin user with a cart
+        // Use: For any default user created in data.sql
+        if(user.getCart() == null) {
+            Cart cart = new Cart();
+            user.setCart(cart);
+            cartRepository.save(cart);
+        }
+
         model.addAttribute("user", user);
         model.addAttribute("totalCost", cartRepository.getTotalCost(user.getCart().getId()));
 
@@ -56,6 +68,14 @@ public class ShopController {
     @PostMapping("/cart/add")
     public RedirectView addToCart(Principal principal, @RequestParam int id) {
         User user = userRepository.findByUsername(principal.getName());
+
+        // TODO: Remove this once we have a default admin user with a cart
+        // Use: For any default user created in data.sql
+        if(user.getCart() == null) {
+            Cart cart = new Cart();
+            user.setCart(cart);
+            cartRepository.save(cart);
+        }
 
         Optional<Game> maybeGame = gameRepository.findById(id);
 
@@ -71,6 +91,51 @@ public class ShopController {
         }
 
         return new RedirectView("/cart");
+    }
+
+    @GetMapping("/cart/checkout")
+    public String checkout(Principal principal, Model model) {
+        User user = userRepository.findByUsername(principal.getName());
+
+        model.addAttribute("user", user);
+        model.addAttribute("totalCost", cartRepository.getTotalCost(user.getCart().getId()));
+
+        return "checkout";
+    }
+
+    @PostMapping("/cart/checkout/complete")
+    public RedirectView checkoutComplete(Principal principal) {
+        User user = userRepository.findByUsername(principal.getName());
+
+        if(user.getCart() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        Cart cart = user.getCart();
+
+        // User now owns these games
+        Set<Game> userGames = user.getGames();
+        for(Game g : cart.getGames()) {
+            userGames.add(g);
+        }
+        user.setGames(userGames);
+
+        Order order = new Order(new Date(), user, cart);
+        orderRepository.save(order);
+
+        Cart emptyCart = new Cart();
+        user.setCart(emptyCart);
+        cartRepository.save(emptyCart);
+
+        return new RedirectView("/orders");
+    }
+
+    @GetMapping("/orders")
+    public String orders(Principal principal, Model model) {
+        User user = userRepository.findByUsername(principal.getName());
+        model.addAttribute("user", user);
+        model.addAttribute("orders", orderRepository.findOrdersByUser(user));
+        return "orders";
     }
 
     @GetMapping("/game/new")
@@ -94,14 +159,19 @@ public class ShopController {
     }
 
     @GetMapping("/game/{id}")
-    public String viewGame(@PathVariable int id, Model model) {
+    public String viewGame(Principal principal, @PathVariable int id, Model model) {
+        User user = userRepository.findByUsername(principal.getName());
         Game game = gameRepository.findGameById(id);
         if (game == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
         model.addAttribute("game", game);
-        model.addAttribute("owns_game", false);
+        if(user.getGames().contains(game)) {
+            model.addAttribute("owns_game", true);
+        } else {
+            model.addAttribute("owns_game", false);
+        }
         return "view_game";
     }
 

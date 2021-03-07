@@ -26,4 +26,20 @@ public class Cart {
     public List<Game> getGames() {
         return games;
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setGames(List<Game> games) {
+        this.games = games;
+    }
+
+    public int getTotalCost() {
+        int cost = 0;
+        for(Game g: getGames()) {
+            cost += g.getPrice();
+        }
+        return cost;
+    }
 }
