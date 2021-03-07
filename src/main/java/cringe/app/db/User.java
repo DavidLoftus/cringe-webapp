@@ -7,8 +7,6 @@ import java.util.Set;
 @Table(name="users")
 public class User {
 
-    // TODO: Add games_owned to the user.
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

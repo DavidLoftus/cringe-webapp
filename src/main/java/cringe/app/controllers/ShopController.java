@@ -9,19 +9,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
-import javax.sql.rowset.serial.SerialBlob;
-import java.io.IOException;
 import java.security.Principal;
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.Optional;
-import java.util.Set;
 
 @Controller
 public class ShopController {
@@ -35,117 +29,12 @@ public class ShopController {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private CartRepository cartRepository;
-
-    @Autowired
-    private OrderRepository orderRepository;
-
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("games", gameRepository.findAll());
         return "index";
     }
 
-<<<<<<< HEAD
-    @GetMapping("/cart")
-    public String viewCart(Principal principal, Model model) {
-        User user = userRepository.findByUsername(principal.getName());
-
-        // TODO: Remove this once we have a default admin user with a cart
-        // Use: For any default user created in data.sql
-        if(user.getCart() == null) {
-            Cart cart = new Cart();
-            user.setCart(cart);
-            cartRepository.save(cart);
-        }
-
-        model.addAttribute("user", user);
-        model.addAttribute("totalCost", cartRepository.getTotalCost(user.getCart().getId()));
-
-        return "cart";
-    }
-
-    @PostMapping("/cart/add")
-    public RedirectView addToCart(Principal principal, @RequestParam int id) {
-        User user = userRepository.findByUsername(principal.getName());
-
-        // TODO: Remove this once we have a default admin user with a cart
-        // Use: For any default user created in data.sql
-        if(user.getCart() == null) {
-            Cart cart = new Cart();
-            user.setCart(cart);
-            cartRepository.save(cart);
-        }
-
-        Optional<Game> maybeGame = gameRepository.findById(id);
-
-        if (maybeGame.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
-
-        Game game = maybeGame.get();
-        Cart cart = user.getCart();
-        if (!cart.getGames().contains(game)) {
-            cart.getGames().add(game);
-            cartRepository.save(cart);
-        }
-
-        return new RedirectView("/cart");
-    }
-
-    @GetMapping("/cart/checkout")
-    public String checkout(Principal principal, Model model) {
-        User user = userRepository.findByUsername(principal.getName());
-
-        model.addAttribute("user", user);
-        model.addAttribute("totalCost", cartRepository.getTotalCost(user.getCart().getId()));
-
-        return "checkout";
-    }
-
-    @PostMapping("/cart/checkout/complete")
-    public RedirectView checkoutComplete(Principal principal) {
-        User user = userRepository.findByUsername(principal.getName());
-
-        if(user.getCart() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
-
-        Cart cart = user.getCart();
-
-        // User now owns these games
-        Set<Game> userGames = user.getGames();
-        for(Game g : cart.getGames()) {
-            userGames.add(g);
-        }
-        user.setGames(userGames);
-
-        Order order = new Order(new Date(), user, cart);
-        orderRepository.save(order);
-
-        Cart emptyCart = new Cart();
-        user.setCart(emptyCart);
-        cartRepository.save(emptyCart);
-
-        return new RedirectView("/orders");
-    }
-
-    @GetMapping("/orders")
-    public String orders(Principal principal, Model model) {
-        User user = userRepository.findByUsername(principal.getName());
-        model.addAttribute("user", user);
-        model.addAttribute("orders", orderRepository.findOrdersByUser(user));
-        return "orders";
-    }
-
-    @GetMapping("/game/new")
-    public String newGame() {
-        return "new_game";
-    }
-
-=======
->>>>>>> 55337c816ce76d823e9a47841c9889e5fdf3cec7
     @GetMapping("/artifact/{id}/**")
     @ResponseBody
     public ResponseEntity<Resource> getArtifact(@PathVariable int id) throws SQLException {
