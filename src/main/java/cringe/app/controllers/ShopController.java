@@ -52,53 +52,6 @@ public class ShopController {
                 .body(resource);
     }
 
-    private boolean checkOwnsGame(Principal principal, Game game) {
-        if (principal == null) {
-            return false;
-        }
-
-        User user = userRepository.findByUsername(principal.getName());
-        return user.getGames().contains(game);
-    }
-
-    @GetMapping("/game/{id}")
-    public String viewGame(Principal principal, @PathVariable int id, Model model) {
-        Game game = gameRepository.findGameById(id);
-        if (game == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-
-        model.addAttribute("game", game);
-        model.addAttribute("owns_game", checkOwnsGame(principal, game));
-        return "view_game";
-    }
-
-    @GetMapping("/game/{id}/buy")
-    public String buyGame(@PathVariable int id, Model model) {
-        Game game = gameRepository.findGameById(id);
-        if (game == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-
-        model.addAttribute("game", game);
-        return "buy_game";
-    }
-
-    @GetMapping("/game/{id}/play")
-    public String playGame(@PathVariable int id, Principal principal, Model model) {
-        Game game = gameRepository.findGameById(id);
-        if (game == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-
-        if (!checkOwnsGame(principal, game)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-        }
-
-        model.addAttribute("game", game);
-        return "jsdos";
-    }
-
     @GetMapping("/search")
     public String search(@RequestParam String query, Model model) {
         List<Game> games = gameRepository.search(String.format("%%%s%%", query));
