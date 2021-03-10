@@ -11,11 +11,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.sql.SQLException;
+import java.util.List;
 
 @Controller
 public class ShopController {
@@ -52,13 +54,14 @@ public class ShopController {
 
     @GetMapping("/game/{id}")
     public String viewGame(Principal principal, @PathVariable int id, Model model) {
-        User user = userRepository.findByUsername(principal.getName());
         Game game = gameRepository.findGameById(id);
         if (game == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
         model.addAttribute("game", game);
+
+        User user = userRepository.findByUsername(principal.getName());
         if(user.getGames().contains(game)) {
             model.addAttribute("owns_game", true);
         } else {
@@ -87,5 +90,12 @@ public class ShopController {
 
         model.addAttribute("game", game);
         return "jsdos";
+    }
+
+    @GetMapping("/search")
+    public String search(@RequestParam String query, Model model) {
+        List<Game> games = gameRepository.search(query);
+        model.addAttribute("games", games);
+        return "search";
     }
 }

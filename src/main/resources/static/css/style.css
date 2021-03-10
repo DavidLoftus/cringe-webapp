@@ -53,6 +53,22 @@ body{
 	cursor: pointer;
 }
 
+.search-result {
+	width: auto;
+	height: 100px;
+	background-color: #171a21;
+	position: relative;
+	margin: 4px 4px;
+	z-index: 402;
+	background-size: 100%;
+	cursor: pointer;
+}
+
+.game-small-icon {
+	max-height: 100%;
+	float: left;
+}
+
 .game-bottom-bar {
 	height: 20%;
 	background-color: #2a475e;
