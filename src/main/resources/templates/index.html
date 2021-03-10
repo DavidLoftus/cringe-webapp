@@ -36,14 +36,20 @@
                         <li class="nav-item">
                             <a class="nav-link links" href="#">About</a>
                         </li>
-                        <li class="nav-item">
+                        <li sec:authorize="isAnonymous()" class="nav-item">
                             <a class="nav-link links" href="/login">Login</a>
                         </li>
-                        <li class="nav-item">
+                        <li sec:authorize="isAuthenticated()" class="nav-item">
                             <a class="nav-link links" href="/cart">View Cart</a>
                         </li>
-                        <li class="nav-item">
+                        <li sec:authorize="isAuthenticated()" class="nav-item">
                             <a class="nav-link links" href="/orders">View Orders</a>
+                        </li>
+                        <li sec:authorize="hasAuthority('admin')" class="nav-item">
+                            <a class="nav-link links" href="/admin">Admin Portal</a>
+                        </li>
+                        <li sec:authorize="isAuthenticated()" class="nav-item">
+                            <a class="nav-link links" href="/logout">Logout</a>
                         </li>
                     </ul>
                 </div>
@@ -63,8 +69,9 @@
             <div class="game-bottom-bar">
                 <div class="game-title-column" th:text="${game.title}">
                 </div>
-                <div class="game-price-column" style="background-color: cyan; width: 30%;"
+                <div class="game-price-column"
                      th:text="${'€' + #numbers.formatDecimal(game.price, 0, 'COMMA', 2, 'POINT')}">
+                    €30.00
                 </div>
             </div>
         </div>
