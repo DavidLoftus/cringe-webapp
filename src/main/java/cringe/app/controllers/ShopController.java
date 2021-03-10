@@ -101,7 +101,7 @@ public class ShopController {
 
     @GetMapping("/search")
     public String search(@RequestParam String query, Model model) {
-        List<Game> games = gameRepository.search(query);
+        List<Game> games = gameRepository.search(String.format("%%%s%%", query));
         model.addAttribute("games", games);
         return "search";
     }
