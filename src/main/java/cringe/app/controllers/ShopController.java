@@ -52,6 +52,15 @@ public class ShopController {
                 .body(resource);
     }
 
+    private boolean checkOwnsGame(Principal principal, Game game) {
+        if (principal == null) {
+            return false;
+        }
+
+        User user = userRepository.findByUsername(principal.getName());
+        return user.getGames().contains(game);
+    }
+
     @GetMapping("/game/{id}")
     public String viewGame(Principal principal, @PathVariable int id, Model model) {
         Game game = gameRepository.findGameById(id);
@@ -60,13 +69,7 @@ public class ShopController {
         }
 
         model.addAttribute("game", game);
-
-        User user = userRepository.findByUsername(principal.getName());
-        if(user.getGames().contains(game)) {
-            model.addAttribute("owns_game", true);
-        } else {
-            model.addAttribute("owns_game", false);
-        }
+        model.addAttribute("owns_game", checkOwnsGame(principal, game));
         return "view_game";
     }
 
@@ -82,10 +85,14 @@ public class ShopController {
     }
 
     @GetMapping("/game/{id}/play")
-    public String playGame(@PathVariable int id, Model model) {
+    public String playGame(@PathVariable int id, Principal principal, Model model) {
         Game game = gameRepository.findGameById(id);
         if (game == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        if (!checkOwnsGame(principal, game)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
 
         model.addAttribute("game", game);
