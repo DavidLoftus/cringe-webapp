@@ -111,7 +111,8 @@ body{
 }
 
 .links {
-	color: #7c7c7c;
+	/*color: #7c7c7c;*/
+	color: #c5c3c0;
 }
 
 .search-bar input {
@@ -120,4 +121,13 @@ body{
 	border: solid 1px #373a41;
 	height: 40px;
 	color: white;
+}
+
+.links:hover {
+	color: #ffffff;
+}
+
+th, tr, td {
+	color: white;
+	text-color: white;
 }

@@ -17,3 +17,29 @@
     });
   }, false);
 })();
+
+function processPayment(id, duration, callback) {
+  var paymentProgress = document.getElementById(id);
+  paymentProgress.className = 'progressbar';
+
+  var progressInner = document.createElement('div');
+  progressInner.className = 'inner';
+  progressInner.style.animationDuration = duration;
+
+  if (typeof(callback) === 'function') {
+    progressInner.addEventListener('animationend', callback);
+  }
+
+  paymentProgress.appendChild(progressInner);
+  progressInner.style.animationPlayState = 'running';
+}
+
+function beforeSubmit() {
+  var form = document.getElementById("checkout-form");
+  if(form.checkValidity() == true) {
+    processPayment('progressBar', '5s', function() {
+      document.getElementById("checkout-form").submit();
+    });
+  }
+  form.classList.add('was-validated');
+}

@@ -2,26 +2,68 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <script type="text/javascript" src="/js/orders.js"></script>
     <title>Orders</title>
 </head>
 <body>
-<b>Orders:</b>
-<table>
-    <thead>
-    <tr>
-        <th>Date</th>
-        <th>Games</th>
-        <!--TODO: Add <th>Price ($)</th> -->
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="order : ${ orders }">
-        <td th:text="${#dates.format(order.date, 'dd-MMM-yyyy')}">01/01/0000></td>
-        <td th:text="${#strings.listJoin(order.cart.games, ', ')}"></td>
-        <td><strong>$<strong th:text="${#numbers.formatDecimal(order.totalCost, 0, 'COMMA', 2, 'POINT')}"></strong></strong></td>
-        <!-- TODO: Do we need this? <td><a th:attr="href=${#paths.view(order)}">View order</a></td>-->
-    </tr>
-    </tbody>
-</table>
+<div class="globalHeader">
+    <div class="content">
+        <div class="navbarContent">
+            <nav class="navbar navbar-expand-lg">
+                <a class="navbar-brand" href="/"><img src="/images/cringe.png" class="logo"></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+                        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link links" href="#">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link links" href="/login">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link links" href="/cart">View Cart</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link links" href="/orders">View Orders</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>
+<div class="mainContent">
+    <b class="text-center" style="color:white;">Orders:</b>
+    <table class="table table-hover table-borderless">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Games</th>
+            <th scope="col">Status</th>
+            <th scope="col">Price</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:id="|order_row_${order.id}|" th:each="order : ${ orders }">
+            <td th:text="${#dates.format(order.date, 'dd-MMM-yyyy')}">01/01/0000></td>
+            <td th:text="${#strings.listJoin(order.cart.games, ', ')}"></td>
+            <td th:id="|order_status_${order.id}|" th:text="${order.status}"></td>
+            <td><strong>$<strong th:text="${#numbers.formatDecimal(order.totalCost, 0, 'COMMA', 2, 'POINT')}"></strong></strong>
+            </td>
+            <td>
+                <button type="button" th:onclick="|refund(${ order.id })|">Refund</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

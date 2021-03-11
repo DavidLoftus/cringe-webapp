@@ -8,22 +8,7 @@
           integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <script type="text/javascript" src="/js/orders.js"></script>
-    <title>Cart</title>
-    <script>
-        function removeFromCart(id) {
-            fetch('/cart/remove', {
-                method: 'POST',
-                body: new URLSearchParams({
-                    id: id,
-                })
-            }).then( resp => {
-                if (resp.ok) {
-                    const row = document.getElementById('game_row_' + id);
-                    row.remove();
-                }
-            })
-        }
-    </script>
+    <title>Orders</title>
 </head>
 <body>
 <div class="globalHeader">
@@ -56,33 +41,31 @@
     </div>
 </div>
 <div class="mainContent">
-    <b class="text-center" style="color:white;">Games:</b>
-        <table class="table table-hover table-borderless">
-            <thead class="thead-dark">
+    <b class="text-center" style="color:white;">Orders:</b>
+    <table class="table table-hover table-borderless">
+        <thead class="thead-dark">
         <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Price (€)</th>
+            <th scope="col">Date</th>
+            <th scope="col">User</th>
+            <th scope="col">Games</th>
+            <th scope="col">Status</th>
+            <th scope="col">Price</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:id="|game_row_${game.id}|" th:each="game : ${ user.cart.games }">
-            <td><a th:text="${game.title}" th:attr="href=${#paths.view(game)}">Doom</a></td>
-            <td th:text="${#numbers.formatDecimal(game.price, 0, 'COMMA', 2, 'POINT')}"></td>
+        <tr th:id="|order_row_${order.id}|" th:each="order : ${ orders }">
+            <td th:text="${#dates.format(order.date, 'dd-MMM-yyyy')}">01/01/0000></td>
+            <td th:text="${#strings.listJoin(order.cart.games, ', ')}"></td>
+            <td th:text="${#strings.listJoin(order.cart.games, ', ')}"></td>
+            <td th:id="|order_status_${order.id}|" th:text="${order.status}"></td>
+            <td><strong>$<strong th:text="${#numbers.formatDecimal(order.totalCost, 0, 'COMMA', 2, 'POINT')}"></strong></strong>
+            </td>
             <td>
-                <button th:onclick="|removeFromCart(${ game.id })|">Remove</button>
+                <button type="button" th:onclick="|refund(${ order.id })|">Refund</button>
             </td>
         </tr>
         </tbody>
-        <tfoot>
-        <tr>
-            <th id="total">Total :</th>
-            <td th:text="${#numbers.formatDecimal(totalCost, 0, 'COMMA', 2, 'POINT')}"></td>
-        </tr>
-        </tfoot>
     </table>
-    <form method="GET" action="/cart/checkout">
-        <button class="w-100 btn btn-primary btn-lg" type="submit">Continue to checkout</button>
-    </form>
 </div>
 </body>
 </html>

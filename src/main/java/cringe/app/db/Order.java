@@ -16,6 +16,13 @@ public class Order {
     @OneToOne
     private Cart cart;
 
+    public enum Status {
+        pending, completed, refunded
+    }
+
+    @Column
+    private Status status;
+
     @Column
     private Date date;
 
@@ -23,12 +30,14 @@ public class Order {
     private int totalCost;
 
     public Order() {
+        this.status = Status.pending;
     }
 
     public Order(Date date, User user, Cart cart) {
         setDate(date);
         setUser(user);
         setCart(cart);
+        this.status = Status.pending;
     }
 
     public int getId() {
@@ -70,6 +79,14 @@ public class Order {
 
     public void setTotalCost(int totalCost) {
         this.totalCost = totalCost;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public void computeTotalCost() {

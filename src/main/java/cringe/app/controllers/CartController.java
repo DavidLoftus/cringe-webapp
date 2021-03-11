@@ -83,6 +83,11 @@ public class CartController {
     public String checkout(Principal principal, Model model) {
         User user = userRepository.findByUsername(principal.getName());
 
+        if(user.getCart().getGames().size() == 0) {
+            // Cannot go to checkout, redirect to index
+            return "index";
+        }
+
         model.addAttribute("user", user);
         model.addAttribute("totalCost", cartRepository.getTotalCost(user.getCart().getId()));
 
@@ -108,6 +113,8 @@ public class CartController {
 
         Order order = new Order(new Date(), user, cart);
         orderRepository.save(order);
+
+        order.setStatus(Order.Status.completed);
 
         Cart emptyCart = new Cart();
         user.setCart(emptyCart);
