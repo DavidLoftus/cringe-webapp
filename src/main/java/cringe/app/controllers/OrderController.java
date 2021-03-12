@@ -26,10 +26,14 @@ public class OrderController {
         model.addAttribute("user", user);
         model.addAttribute("orders", orderRepository.findOrdersByUser(user));
 
-        // TODO: Add view all orders
-        // Copy orders page
-        // Select * sort by price desc
-
+        for(Order o: orderRepository.findOrdersByUser(user)) {
+            if(o.getStatus() == Order.Status.pending) {
+                orderRepository.updateStatus(o.getId(), Order.Status.processing);
+            }
+            if(o.getStatus() == Order.Status.processing) {
+                orderRepository.updateStatus(o.getId(), Order.Status.completed);
+            }
+        }
 
         // TODO(evanSpendlove): Remove these print statements
         for(Order o: orderRepository.findOrdersByUser(user)) {

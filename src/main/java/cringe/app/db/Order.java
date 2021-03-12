@@ -17,7 +17,7 @@ public class Order {
     private Cart cart;
 
     public enum Status {
-        pending, completed, refunded
+        pending, processing, completed, refunded
     }
 
     @Column

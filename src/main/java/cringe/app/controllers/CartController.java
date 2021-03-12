@@ -110,8 +110,6 @@ public class CartController {
         Order order = new Order(new Date(), user, cart);
         orderRepository.save(order);
 
-        order.setStatus(Order.Status.completed);
-
         Cart emptyCart = new Cart();
         user.setCart(emptyCart);
         cartRepository.save(emptyCart);

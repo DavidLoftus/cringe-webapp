@@ -1,3 +1,4 @@
+/*
 (function () {
   'use strict';
 
@@ -17,6 +18,7 @@
     });
   }, false);
 })();
+ */
 
 function processPayment(id, duration, callback) {
   var paymentProgress = document.getElementById(id);
@@ -37,9 +39,7 @@ function processPayment(id, duration, callback) {
 function beforeSubmit() {
   var form = document.getElementById("checkout-form");
   if(form.checkValidity() == true) {
-    processPayment('progressBar', '5s', function() {
-      document.getElementById("checkout-form").submit();
-    });
+    document.getElementById("checkout-form").submit();
   }
   form.classList.add('was-validated');
 }
