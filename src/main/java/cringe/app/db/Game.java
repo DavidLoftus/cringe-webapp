@@ -29,6 +29,9 @@ public class Game {
     @Column
     private String description;
 
+    public Game() {
+    }
+
     public int getId() {
         return id;
     }

@@ -7,8 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import org.thymeleaf.util.StringUtils;
 
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
@@ -35,7 +35,6 @@ public class AdminController {
     @GetMapping
     public String adminPortal(Model model) {
         model.addAttribute("games", gameRepository.findAll());
-
         return "admin/index.html";
     }
 

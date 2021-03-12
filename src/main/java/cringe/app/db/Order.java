@@ -17,7 +17,7 @@ public class Order {
     private Cart cart;
 
     public enum Status {
-        pending, completed, refunded
+        pending, processing, completed, refunded
     }
 
     @Column
@@ -27,7 +27,10 @@ public class Order {
     private Date date;
 
     @Column
-    private int totalCost;
+    private String receipt;
+
+    @Column
+    private float totalCost;
 
     public Order() {
         this.status = Status.pending;
@@ -37,6 +40,7 @@ public class Order {
         setDate(date);
         setUser(user);
         setCart(cart);
+        setReceipt(cart);
         this.status = Status.pending;
     }
 
@@ -73,11 +77,11 @@ public class Order {
         this.date = date;
     }
 
-    public int getTotalCost() {
+    public float getTotalCost() {
         return totalCost;
     }
 
-    public void setTotalCost(int totalCost) {
+    public void setTotalCost(float totalCost) {
         this.totalCost = totalCost;
     }
 
@@ -87,6 +91,19 @@ public class Order {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getReceipt() {
+        return receipt;
+    }
+
+    public void setReceipt(Cart cart) {
+        computeTotalCost();
+        StringBuilder rec = new StringBuilder();
+        for(Game g: cart.getGames()) {
+            rec.append(g.getTitle()).append(": €").append(String.format("%.2f", g.getPrice())).append("\n");
+        }
+        this.receipt = rec.append("Total: €").append(String.format("%.2f", getTotalCost())).toString();
     }
 
     public void computeTotalCost() {

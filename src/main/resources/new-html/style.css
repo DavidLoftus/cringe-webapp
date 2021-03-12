@@ -1,0 +1,199 @@
+body{
+	width: 100%;
+	background-color: #1b2838;
+}
+
+.globalHeader {
+	background-color: #171a21;
+	height: 104px;
+	min-width: 940px;
+	padding-left: 16px;
+	padding-right: 16px;
+	margin: 0;
+}
+
+.content {
+	width: 940px;
+	height: 100%;
+	position: relative;
+	right: 0;
+	margin: 0px auto;
+	z-index: 402;
+	color: #ffffff;
+}
+
+.mainNav {
+	padding-top: 30px;
+	margin-right: 40px;
+	width: 176px;
+	height: 44px;
+}
+
+.banner {
+	height: 450px;
+	background-color: #2a475e;
+}
+
+.box{
+	display: flex;
+	flex-flow: column;
+	height: 100vh;
+}
+.mainContent{
+	background-color: #1b2838;
+	position: relative;
+	flex: 1 1 auto;
+}
+
+.game {
+	width: 305px;
+	height: 305px;
+	background-color: #ffffff;
+	position: relative;
+	float: left;
+	margin: 4px 4px;
+	z-index: 402;
+}
+
+.navbarContent {
+	padding-top: 15px;
+}
+
+.logo {
+	width: 176px;
+	height: 100%;
+}
+
+.links {
+	color: #7c7c7c;
+}
+
+.item-banner {
+	height: 343px;
+	width: 100%;
+}
+
+.item-banner-bg {
+	background-color: #223347;
+	opacity: 1;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	object-fit: cover;
+}
+
+.banner-image {
+	opacity: 1;
+	height: 100%;
+	width: 610px;
+	float: left;
+}
+
+.banner-description {
+	height: 100%;
+	width: 305px;
+	float: right;
+}
+
+.banner-img {
+	width: 610px;
+}
+
+img {
+	max-height: 100%;
+	max-width: 100%;
+}
+.game-bg {
+	opacity: 0.1;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	object-fit: cover;
+}
+.content h1 {
+	padding-top: 8px;
+	font-size: 2.2rem;
+}
+.banner-description img {
+	width: 305px;
+	object-fit: contain;
+	float: right;
+}
+
+#desc {
+	font-size: 0.8rem;
+}
+
+.purchase {
+	border-radius: 5px;
+	width: 100%;
+	height: 72px;
+	padding: 5px;
+	margin-bottom: 28px;
+	margin-top: 50px;
+	background: linear-gradient(90deg, rgba(84,88,92,0.8), rgba(84,88,92,0.9));
+}
+
+.mask {
+	-webkit-mask-image: radial-gradient(ellipse 60% 80% at 50% 25%, black 40%, transparent 50%);
+	mask-image: radial-gradient(ellipse 100% 100% at 50% 30%, black 20%, transparent 50%);
+}
+
+.purchase h1 {
+	padding: 16px;
+	padding-bottom: 26px;
+	font-weight: normal;
+	font-size: 21px;
+}
+
+.lower-purchase {
+	position: relative;
+	width: 800px;
+	right: 0px;
+	top: -23px;
+	left: 16px;
+	text-align: right;
+	padding: 0;
+	margin: 0 auto;
+}
+
+.purchase-bottom {cd
+	height: 36px;
+	vertical-align: bottom;
+	display: inline-block;
+	right: -32px;
+	background-color: #000000;
+	padding: 0px 5px 2px 0px;
+	border-radius: 5px;
+}
+
+.purchase-price {
+	background-color: #000000;
+	border-radius: 5px;
+	display: inline-block;
+	font-size: 13px;
+	padding-top: 8px;
+	padding-left: 12px;
+	padding-right: 12px;
+	height: 24px;
+}
+
+.purchase-button {
+	position: relative;
+	display: inline-block;
+	font-size: 12px;
+	margin-left: 2px;
+	vertical-align: middle;
+}
+.btn {
+	border-radius: 2px;
+	border: none;
+	padding: 1px;
+	display: inline-block;
+	cursor: pointer;
+	text-decoration: none !important;
+	color: #d2efa9;
+	background: linear-gradient( to right, #8ed629 5%, #6aa621 95%);
+}

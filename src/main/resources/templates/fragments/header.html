@@ -25,10 +25,13 @@
                             <a class="nav-link links" href="/login">Login</a>
                         </li>
                         <li sec:authorize="isAuthenticated()" class="nav-item">
-                            <a class="nav-link links" href="/cart">View Cart</a>
+                            <a class="nav-link links" href="/library">Library</a>
                         </li>
                         <li sec:authorize="isAuthenticated()" class="nav-item">
-                            <a class="nav-link links" href="/orders">View Orders</a>
+                            <a class="nav-link links" href="/cart">Cart</a>
+                        </li>
+                        <li sec:authorize="isAuthenticated()" class="nav-item">
+                            <a class="nav-link links" href="/orders">Orders</a>
                         </li>
                         <li sec:authorize="hasAuthority('admin')" class="nav-item">
                             <a class="nav-link links" href="/admin">Admin Portal</a>
