@@ -50,9 +50,11 @@
             </div>
             <div class="form-group">
                 <input type="text" th:field="*{fullName}" class="form-control" placeholder="Full name"/>
+                <span class="has-error" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></span>
             </div>
             <div class="form-group">
                 <input type="text" th:field="*{email}" class="form-control" placeholder="Email"/>
+                <span class="has-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
             </div>
             <div class="form-group">
                 <input type="password" th:field="*{password}" class="form-control" placeholder="Password">

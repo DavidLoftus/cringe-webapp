@@ -1,3 +1,5 @@
 target/
 .idea/
 thats-pretty-cringe.iml
+.DS_Store
+app.iml
