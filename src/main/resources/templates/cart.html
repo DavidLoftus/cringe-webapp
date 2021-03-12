@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/css/style.css">
-    <script type="text/javascript" src="/js/orders.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Cart</title>
     <script>
         function removeFromCart(id) {
@@ -18,15 +18,31 @@
                 })
             }).then( resp => {
                 if (resp.ok) {
+                    // Reduce total price
+                    var totalPrice = document.getElementById('totalPrice');
+                    const gamePrice = parseFloat(document.getElementById('game_price_' + id).innerText);
+                    console.log("Total Price: " + totalPrice.innerText);
+                    console.log("Game Price: " + gamePrice);
+                    console.log("New Price: " + (parseFloat(totalPrice.innerText) - gamePrice));
+                    totalPrice.innerText = (parseFloat(totalPrice.innerText) - gamePrice).toFixed(2);
+
+                    // Remove row
                     const row = document.getElementById('game_row_' + id);
                     row.remove();
+
+                    // If cart is empty, remove checkout button
+                    const cart = document.getElementById('cart');
+                    console.log("Num of rows: " + cart.rows.length);
+                    if(cart.rows.length == 2) {
+                        document.getElementById('btn-checkout').remove();
+                    }
                 }
             })
         }
     </script>
 </head>
 <body>
-<div class="globalHeader">
+<div th:replace="fragments/header :: header" class="globalHeader">
     <div class="content">
         <div class="navbarContent">
             <nav class="navbar navbar-expand-lg">
@@ -43,12 +59,6 @@
                         <li class="nav-item">
                             <a class="nav-link links" href="/login">Login</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link links" href="/cart">View Cart</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link links" href="/orders">View Orders</a>
-                        </li>
                     </ul>
                 </div>
             </nav>
@@ -57,7 +67,7 @@
 </div>
 <div class="mainContent">
     <b class="text-center" style="color:white;">Games:</b>
-        <table class="table table-hover table-borderless">
+        <table id="cart" class="table table-hover table-borderless">
             <thead class="thead-dark">
         <tr>
             <th scope="col">Name</th>
@@ -67,7 +77,7 @@
         <tbody>
         <tr th:id="|game_row_${game.id}|" th:each="game : ${ user.cart.games }">
             <td><a th:text="${game.title}" th:attr="href=${#paths.view(game)}">Doom</a></td>
-            <td th:text="${#numbers.formatDecimal(game.price, 0, 'COMMA', 2, 'POINT')}"></td>
+            <td th:id="|game_price_${game.id}|" th:text="${#numbers.formatDecimal(game.price, 0, 'COMMA', 2, 'POINT')}"></td>
             <td>
                 <button th:onclick="|removeFromCart(${ game.id })|">Remove</button>
             </td>
@@ -76,12 +86,13 @@
         <tfoot>
         <tr>
             <th id="total">Total :</th>
-            <td th:text="${#numbers.formatDecimal(totalCost, 0, 'COMMA', 2, 'POINT')}"></td>
+            <td id="totalPrice" th:text="${#numbers.formatDecimal(totalCost, 0, 'COMMA', 2, 'POINT')}"></td>
         </tr>
         </tfoot>
     </table>
-    <form method="GET" action="/cart/checkout">
-        <button class="w-100 btn btn-primary btn-lg" type="submit">Continue to checkout</button>
+    <p th:text="${cartFull}"></p>
+    <form th:if="${cartFull}" method="GET" action="/cart/checkout">
+        <button th:if="${cartFull}" class="w-100 btn btn-primary btn-lg" id="btn-checkout" type="submit">Continue to checkout</button>
     </form>
 </div>
 </body>

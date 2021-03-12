@@ -36,6 +36,7 @@ public class CartController {
 
         System.out.println(user.getCart());
         model.addAttribute("user", user);
+        model.addAttribute("cartFull", (user.getCart().getGames().size() != 0));
         model.addAttribute("totalCost", cartRepository.getTotalCost(user.getCart().getId()));
 
         return "cart";
@@ -82,11 +83,6 @@ public class CartController {
     @GetMapping("/checkout")
     public String checkout(Principal principal, Model model) {
         User user = userRepository.findByUsername(principal.getName());
-
-        if(user.getCart().getGames().size() == 0) {
-            // Cannot go to checkout, redirect to index
-            return "index";
-        }
 
         model.addAttribute("user", user);
         model.addAttribute("totalCost", cartRepository.getTotalCost(user.getCart().getId()));
