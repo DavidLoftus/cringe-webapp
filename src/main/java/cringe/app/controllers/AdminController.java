@@ -3,10 +3,12 @@ package cringe.app.controllers;
 import cringe.app.db.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -33,8 +35,9 @@ public class AdminController {
     private OrderRepository orderRepository;
 
     @GetMapping
-    public String adminPortal() {
-        return "admin/index.html";
+    public String adminPortal(Model model) {
+        model.addAttribute("games", gameRepository.findAll());
+        return "admin/index";
     }
 
     @PostMapping("/new_game")
@@ -47,8 +50,34 @@ public class AdminController {
     }
 
     @GetMapping("/game/{id}")
-    public String newGame(@PathVariable int id) {
+    public String newGame(@PathVariable int id, Model model) {
+        Game game = gameRepository.findGameById(id);
+        model.addAttribute("gameDetails", game);
+        model.addAttribute("game", game);
         return "admin/edit_game";
+    }
+
+    @PostMapping(value="/update/{id}")
+    public String editGame(@PathVariable int id, @ModelAttribute("gameDetails") Game game, Model model) {
+        Game original = gameRepository.findGameById(id);
+        if(game.getDescription() != null) {
+            original.setDescription(game.getDescription());
+        }
+        if(game.getPrice() != 0.0) {
+            original.setPrice(game.getPrice());
+        }
+        if(game.getArtifact() != null) {
+            original.setArtifact(game.getArtifact());
+        }
+        if(game.getIcon() != null) {
+            original.setIcon(game.getIcon());
+        }
+
+        gameRepository.save(original);
+        // TODO(evanSpendlove): Add more as we add more attributes of a game
+
+        model.addAttribute("games", gameRepository.findAll());
+        return "admin/index";
     }
 
 //    @PostMapping("/upload")
@@ -62,15 +91,12 @@ public class AdminController {
 
 
     @GetMapping("/orders")
-    public String allOrders(Principal principal, Model model) {
+    public String orders(Principal principal, Model model) {
         User user = userRepository.findByUsername(principal.getName());
-        // TODO(evanSpendlove): re-enable after we have an admin a/c
-        /*
         if(!user.hasRole("admin")) {
             // Access denied
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-         */
 
         List<Order> orders = orderRepository.findAll(Sort.by(Sort.Direction.ASC, "status"));
 

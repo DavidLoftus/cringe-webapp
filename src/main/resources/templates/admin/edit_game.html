@@ -11,39 +11,23 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!--    <link rel="icon" type="image/svg+xml" href="/favicon.svg">-->
     <!--    <link rel="alternate icon" href="/favicon.ico">-->
-    <title>Admin Portal</title>
+    <title>Edit Game</title>
 </head>
 <body>
 <div th:replace="fragments/header :: header" class="globalHeader"></div>
 <div class="mainContent">
-    <!--
-    TODO(evanSpendlove):
-        - Add the option to upload games
-        - Add the option to view orders
-        - Add the option to edit games
-        - Add the option to view revenue (Extra thing: could offer basic analytics)
-    -->
     <div class="content">
-        <div th:attr="onclick=|window.location = '${#paths.edit(game)}';|" th:each="game : ${ games }" class="game" th:style="|background-image: url(${#paths.get(game.icon)});|">
-            <div class="game-bottom-bar">
-                <div class="game-title-column" th:text="${game.title}">
-                </div>
-                <div class="game-price-column" th:attr="onclick=|window.location = '${#paths.edit(game)}';|">
-                    Edit
-                </div>
+        <form class="form-signin" method="POST" th:object="${gameDetails}"  th:attr="action=@{|/admin/update/${game.id}|}">
+            <h2 class="form-heading" th:text="${game.id}">SIGN IN</h2>
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input th:field="*{title}" th:placeholder="${game.title}" name="title" type="text" class="form-control" id="title" readonly/>
+                <label for="description">Description</label>
+                <input th:field="*{description}"  name="description" type="text" class="form-control" id="description" th:placeholder="${game.description}" autofocus="true"/>
+                <label for="price">Price</label>
+                <input th:field="*{price}" name="price" type="text" class="form-control" id="price" th:placeholder="${game.price}"/>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Update Game Details</button>
             </div>
-        </div>
-        <b>
-            Add new game:
-        </b>
-        <form action="/admin/new_game" method="post">
-            <label>
-                Title:
-                <input type="text" name="title">
-            </label>
-            <label>
-                <input type="submit">
-            </label>
         </form>
     </div>
 </div>
