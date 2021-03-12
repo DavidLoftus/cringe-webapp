@@ -7,8 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
+import org.thymeleaf.util.StringUtils;
 
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
@@ -33,7 +33,9 @@ public class AdminController {
     private OrderRepository orderRepository;
 
     @GetMapping
-    public String adminPortal() {
+    public String adminPortal(Model model) {
+        model.addAttribute("games", gameRepository.findAll());
+
         return "admin/index.html";
     }
 
@@ -47,31 +49,61 @@ public class AdminController {
     }
 
     @GetMapping("/game/{id}")
-    public String newGame(@PathVariable int id) {
+    public String editGame(@PathVariable int id, Model model) {
+        model.addAttribute("game", gameRepository.findGameById(id));
+
         return "admin/edit_game";
     }
 
-//    @PostMapping("/upload")
-    public void uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) throws IOException, SQLException {
+    @PostMapping("/game/{id}")
+    public String editGame(@PathVariable int id,
+                           @RequestParam(required = false) String title,
+                           @RequestParam(required = false) String description,
+                           @RequestParam(required = false) Float price,
+                           Model model) {
+        Game game = gameRepository.findGameById(id);
+
+        if (StringUtils.isEmpty(title)) {
+            game.setTitle(title);
+        }
+
+        if (StringUtils.isEmpty(description)) {
+            game.setDescription(description);
+        }
+
+        if (price != null) {
+            game.setPrice(price);
+        }
+
+        return editGame(id, model);
+    }
+
+    public enum UploadType {
+        RELEASE,
+        ICON,
+        BANNER,
+    }
+
+    @PostMapping("/game/{id}/upload")
+    public void uploadFile(@PathVariable int id, @RequestParam("file") MultipartFile file, @RequestParam UploadType type) throws IOException, SQLException {
+        Game game = gameRepository.findGameById(id);
+
         Artifact artifact = new Artifact();
         artifact.setData(new SerialBlob(file.getBytes()));
         artifact.setFileName(file.getOriginalFilename());
         artifact.setContentType(file.getContentType());
         artifact = artifactRepository.save(artifact);
+
+        switch (type) {
+            case RELEASE -> game.setRelease(artifact);
+            case ICON -> game.setIcon(artifact);
+        }
+        gameRepository.save(game);
     }
 
 
     @GetMapping("/orders")
     public String allOrders(Principal principal, Model model) {
-        User user = userRepository.findByUsername(principal.getName());
-        // TODO(evanSpendlove): re-enable after we have an admin a/c
-        /*
-        if(!user.hasRole("admin")) {
-            // Access denied
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
-         */
-
         List<Order> orders = orderRepository.findAll(Sort.by(Sort.Direction.ASC, "status"));
 
         model.addAttribute("orders", orders);
