@@ -17,15 +17,15 @@
 <div th:replace="fragments/header :: header" class="globalHeader"></div>
 <div class="mainContent">
     <div class="content">
-        <form class="form-signin" method="POST" th:object="${gameDetails}"  th:attr="action=@{|/admin/update/${game.id}|}">
+        <form id="edit-form" method="POST">
             <h2 class="form-heading">Edit Game Details</h2>
             <div class="form-group">
                 <label for="title">Title</label>
-                <input th:field="*{title}" th:placeholder="${game.title}" name="title" type="text" class="form-control" id="title" readonly/>
+                <input th:value="${game.title}" name="title" type="text" class="form-control" id="title"/>
                 <label for="description">Description</label>
-                <input th:field="*{description}"  name="description" type="text" class="form-control" id="description" th:placeholder="${game.description}" autofocus="true"/>
+                <textarea name="description" form="edit-form" class="form-control" id="description" th:text="${game.description}"></textarea>
                 <label for="price">Price</label>
-                <input th:field="*{price}" name="price" type="text" class="form-control" id="price" th:placeholder="${game.price}"/>
+                <input name="price" type="number" class="form-control" id="price" th:value="${game.price}"/>
                 <button class="btn btn-lg btn-primary btn-block" type="submit">Update Game Details</button>
             </div>
         </form>

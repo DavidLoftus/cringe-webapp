@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
+import org.thymeleaf.util.StringUtils;
 
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
@@ -55,18 +56,18 @@ public class AdminController {
     }
 
     @PostMapping("/game/{id}")
-    public String editGame(@PathVariable int id,
+    public RedirectView editGame(@PathVariable int id,
                            @RequestParam(required = false) String title,
                            @RequestParam(required = false) String description,
                            @RequestParam(required = false) Float price,
                            Model model) {
         Game game = gameRepository.findGameById(id);
 
-        if (StringUtils.isEmpty(title)) {
+        if (!StringUtils.isEmpty(title)) {
             game.setTitle(title);
         }
 
-        if (StringUtils.isEmpty(description)) {
+        if (!StringUtils.isEmpty(description)) {
             game.setDescription(description);
         }
 
@@ -74,7 +75,9 @@ public class AdminController {
             game.setPrice(price);
         }
 
-        return editGame(id, model);
+        gameRepository.save(game);
+
+        return new RedirectView("/admin/game/" + id);
     }
 
     public enum UploadType {
