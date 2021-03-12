@@ -131,3 +131,7 @@ th, tr, td {
 	color: white;
 	text-color: white;
 }
+
+td {
+	white-space:pre
+}

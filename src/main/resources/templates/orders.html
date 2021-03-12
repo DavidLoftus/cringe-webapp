@@ -40,17 +40,17 @@
         <thead class="thead-dark">
         <tr>
             <th scope="col">Date</th>
-            <th scope="col">Games</th>
-            <th scope="col">Status</th>
+            <th scope="col">Details</th>
             <th scope="col">Price</th>
+            <th scope="col">Status</th>
         </tr>
         </thead>
         <tbody>
         <tr th:id="|order_row_${order.id}|" th:each="order : ${ orders }">
             <td th:text="${#dates.format(order.date, 'dd-MMM-yyyy')}">01/01/0000></td>
-            <td th:text="${#strings.listJoin(order.cart.games, ', ')}"></td>
-            <td th:id="|order_status_${order.id}|" th:text="${order.status}"></td>
+            <td th:text="${order.receipt}"></td>
             <td><strong>$<strong th:text="${#numbers.formatDecimal(order.totalCost, 0, 'COMMA', 2, 'POINT')}"></strong></strong>
+            <td th:id="|order_status_${order.id}|" th:text="${order.status}"></td>
             </td>
             <td>
                 <button type="button" th:onclick="|refund(${ order.id })|">Refund</button>

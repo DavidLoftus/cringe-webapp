@@ -34,6 +34,8 @@ public class OrderController {
         // TODO(evanSpendlove): Remove these print statements
         for(Order o: orderRepository.findOrdersByUser(user)) {
             System.out.println("Order: " + o.getId() + ", status: " + o.getStatus());
+            System.out.println("Order: " + o.getId() + ", receipt: " + o.getReceipt());
+            System.out.println("Order: " + o.getId() + ", totalCost: " + o.getTotalCost());
         }
 
         System.out.println(user.getGames());

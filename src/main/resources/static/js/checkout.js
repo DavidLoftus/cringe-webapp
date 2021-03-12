@@ -43,3 +43,10 @@ function beforeSubmit() {
   }
   form.classList.add('was-validated');
 }
+
+
+function adminBuy() {
+  var form = document.getElementById("checkout-form");
+  document.getElementById("checkout-form").submit();
+  form.classList.add('was-validated');
+}
