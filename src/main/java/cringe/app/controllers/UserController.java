@@ -1,6 +1,7 @@
 package cringe.app.controllers;
 
 import cringe.app.db.User;
+import cringe.app.db.UserRepository;
 import cringe.app.security.SecurityService;
 import cringe.app.security.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.security.Principal;
+
 @Controller
 public class UserController {
+    @Autowired
+    UserRepository userRepository;
+
     @Autowired
     private UserService userService;
 
@@ -58,5 +64,12 @@ public class UserController {
             model.addAttribute("message", "You have been logged out successfully.");
 
         return "login";
+    }
+
+    @GetMapping("/library")
+    public String library(Model model, Principal principal) {
+        User user = userRepository.findByUsername(principal.getName());
+        model.addAttribute("user", user);
+        return "library";
     }
 }
