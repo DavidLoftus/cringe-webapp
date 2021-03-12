@@ -1,32 +1,63 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
 <!--/*@thymesVar id="games" type="java.util.Collection<cringe.app.db.Game>"*/-->
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+
     <title>Cringe Admin Portal</title>
 </head>
 <body>
+<div th:replace="fragments/header :: header" class="globalHeader">
+    <div class="content">
+        <div class="navbarContent">
+            <nav class="navbar navbar-expand-lg">
+                <a class="navbar-brand" href="#"><img src="/images/cringe.png" class="logo"></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+                        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link links" href="#">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link links" href="/login">Login</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>
+<div class="mainContent">
+    <div class="content">
+        <a href="/admin/orders">View Orders</a>
+        <br>
 
-<b>
-    Games:
-</b>
-<ul>
-    <li th:each="game : ${ games }">
-        <a th:value="${game.title}" th:href="${#paths.edit(game)}">Some game</a>
-    </li>
-</ul>
+        <b>Games:</b>
+        <ul>
+            <li th:each="game : ${ games }">
+                <a th:text="${game.title}" th:href="${#paths.edit(game)}">Some game</a>
+            </li>
+        </ul>
 
-<b>
-    Add new game:
-</b>
-<form action="/admin/new_game" method="post">
-    <label>
-        Title:
-        <input type="text" name="title">
-    </label>
-    <label>
-        <input type="submit">
-    </label>
-</form>
+        <b>Add new game:</b>
+        <form action="/admin/new_game" method="post">
+            <label>
+                Title:
+                <input type="text" name="title">
+            </label>
+            <label>
+                <input type="submit">
+            </label>
+        </form>
+    </div>
+</div>
 </body>
 </html>

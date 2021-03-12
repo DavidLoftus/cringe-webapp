@@ -15,7 +15,7 @@ public class Game {
     private String title;
 
     @OneToOne(orphanRemoval = true)
-    private Artifact artifact;
+    private Artifact release;
 
     @OneToOne(orphanRemoval = true)
     private Artifact icon;
@@ -45,12 +45,12 @@ public class Game {
         this.title = title;
     }
 
-    public Artifact getArtifact() {
-        return artifact;
+    public Artifact getRelease() {
+        return release;
     }
 
-    public void setArtifact(Artifact artifact) {
-        this.artifact = artifact;
+    public void setRelease(Artifact artifact) {
+        this.release = artifact;
     }
 
     public Artifact getIcon() {
