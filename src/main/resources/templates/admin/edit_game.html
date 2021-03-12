@@ -18,7 +18,7 @@
 <div class="mainContent">
     <div class="content">
         <form class="form-signin" method="POST" th:object="${gameDetails}"  th:attr="action=@{|/admin/update/${game.id}|}">
-            <h2 class="form-heading" th:text="${game.id}">SIGN IN</h2>
+            <h2 class="form-heading">Edit Game Details</h2>
             <div class="form-group">
                 <label for="title">Title</label>
                 <input th:field="*{title}" th:placeholder="${game.title}" name="title" type="text" class="form-control" id="title" readonly/>
