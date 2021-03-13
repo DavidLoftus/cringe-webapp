@@ -21,6 +21,9 @@ public class PathsUtil {
     }
 
     public String get(Artifact artifact) {
+        if (artifact == null) {
+            return "/artifact/-1/missing_artifact";
+        }
         return String.format("/artifact/%d/%s", artifact.getId(), artifact.getFileName());
     }
 }

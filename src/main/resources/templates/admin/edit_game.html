@@ -24,8 +24,8 @@
                 <input th:value="${game.title}" name="title" type="text" class="form-control" id="title"/>
                 <label for="description">Description</label>
                 <textarea name="description" form="edit-form" class="form-control" id="description" th:text="${game.description}"></textarea>
-                <label for="price">Price</label>
-                <input name="price" type="number" class="form-control" id="price" th:value="${game.price}"/>
+                <label for="price">Price (€)</label>
+                <input name="price" type="number" step="0.01" min="0.00" class="form-control" id="price" th:value="${game.price}"/>
                 <button class="btn btn-lg btn-primary btn-block" type="submit">Update Game Details</button>
             </div>
         </form>

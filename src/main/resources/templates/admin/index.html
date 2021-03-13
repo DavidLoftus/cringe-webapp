@@ -28,23 +28,23 @@
             <div class="game-bottom-bar">
                 <div class="game-title-column" th:text="${game.title}">
                 </div>
-                <div class="game-price-column" th:attr="onclick=|window.location = '${#paths.edit(game)}';|">
+                <div class="game-price-column">
                     Edit
                 </div>
             </div>
         </div>
-        <b>
-            Add new game:
-        </b>
-        <form action="/admin/new_game" method="post">
-            <label>
-                Title:
-                <input type="text" name="title">
-            </label>
-            <label>
-                <input type="submit">
-            </label>
-        </form>
+        <div class="game" style="background-image: url(/images/circle+plus+icon.png);">
+            <form id="new-form" action="/admin/new_game" method="post">
+                <div class="game-bottom-bar">
+                    <div class="game-title-column">
+                        <input style="max-width: 100%; max-height: 75%;" type="text" name="title">
+                    </div>
+                    <div class="game-price-column" onclick="document.forms['new-form'].submit()">
+                        New
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
