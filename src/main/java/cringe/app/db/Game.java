@@ -20,12 +20,22 @@ public class Game {
     @OneToOne(orphanRemoval = true)
     private Artifact icon;
 
+    @OneToOne(orphanRemoval = true)
+    private Artifact logo;
+
+    @OneToOne(orphanRemoval = true)
+    private Artifact banner;
+
+    @OneToOne(orphanRemoval = true)
+    private Artifact background;
+
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<User> users;
 
     @Column
     private Float price;
 
+    @Lob
     @Column
     private String description;
 
@@ -73,7 +83,7 @@ public class Game {
     }
 
     public float getPrice() {
-        return price;
+        return price == null ? 0.0f : price;
     }
 
     public void setPrice(float price) {
@@ -90,5 +100,38 @@ public class Game {
 
     public String toString() {
         return getTitle();
+    }
+
+    public Artifact getLogo() {
+        if (logo == null) {
+            return icon;
+        }
+        return logo;
+    }
+
+    public void setLogo(Artifact logo) {
+        this.logo = logo;
+    }
+
+    public Artifact getBanner() {
+        if (banner == null) {
+            return icon;
+        }
+        return banner;
+    }
+
+    public void setBanner(Artifact banner) {
+        this.banner = banner;
+    }
+
+    public Artifact getBackground() {
+        if (background == null) {
+            return icon;
+        }
+        return background;
+    }
+
+    public void setBackground(Artifact background) {
+        this.background = background;
     }
 }
