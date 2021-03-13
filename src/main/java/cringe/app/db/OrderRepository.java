@@ -19,6 +19,5 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     int updateStatus(@Param("orderId") int orderId, @Param("status") Order.Status status);
 
     @Query("SELECT o FROM Order o LEFT JOIN o.purchases as P LEFT JOIN P.game as g WHERE g.id = :gameId")
-    // @Query("SELECT o FROM Order o JOIN Purchase p WHERE p.game.id = :gameId")
     List<Order> findOrdersByGameId(@Param("gameId") int gameId);
 }

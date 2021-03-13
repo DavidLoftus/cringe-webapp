@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script type="text/javascript" src="/js/orders.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+    <title>Analytics</title>
+    <!--    <link rel="icon" type="image/svg+xml" href="/favicon.svg">-->
+    <!--    <link rel="alternate icon" href="/favicon.ico">-->
+</head>
+<body>
+<div th:replace="fragments/header :: header" class="globalHeader"></div>
+<div class="mainContent">
+    <b class="text-center" style="color:white;">Game Sales:</b>
+
+    <table class="table table-hover table-borderless">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Game</th>
+            <th scope="col">Total Sales</th>
+            <th scope="col">Price</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="sale : ${ gameSales }">
+            <td th:text="${sale.game.title}"></td>
+            <td><strong>$<strong th:text="${#numbers.formatDecimal(sale.totalSales, 0, 'COMMA', 2, 'POINT')}"></strong></strong>
+            </td>
+            <td><strong>$<strong th:text="${#numbers.formatDecimal(sale.game.price, 0, 'COMMA', 2, 'POINT')}"></strong></strong>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <figure class="highcharts-figure">
+        <div id="container"></div>
+    </figure>
+    <script>
+        /*<![CDATA[*/
+        var formatteddata = [];
+        var result = [[${totalsPerGame}]];
+        for(var key in result){
+            var singleObject = {
+                name: key.toUpperCase(),
+                data: [result[key]]
+            }
+            formatteddata.push(singleObject);
+        }
+        Highcharts.chart('container', {
+
+            title: {
+                text: 'Total Sales Per Game'
+            },
+
+            yAxis: {
+                title: {
+                    text: 'Total Sales ($)'
+                }
+            },
+
+            xAxis: {
+                accessibility: {
+                    rangeDescription: 'Range of Games'
+                }
+            },
+
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle'
+            },
+
+            plotOptions: {
+                series: {
+                    label: {
+                        connectorAllowed: false
+                    },
+                    pointStart: 0
+                }
+            },
+
+            series: formatteddata,
+
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        legend: {
+                            layout: 'horizontal',
+                            align: 'center',
+                            verticalAlign: 'bottom'
+                        }
+                    }
+                }]
+            }
+
+        });
+
+        /*
+        Highcharts.chart('container', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'Browser market shares in January, 2018'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            accessibility: {
+                point: {
+                    valueSuffix: '%'
+                }
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                    }
+                }
+            },
+            series: [{
+                name: 'Brands',
+                colorByPoint: true,
+                data: [{
+                    name: 'Chrome',
+                    y: 61.41,
+                    sliced: true,
+                    selected: true
+                }, {
+                    name: 'Internet Explorer',
+                    y: 11.84
+                }, {
+                    name: 'Firefox',
+                    y: 10.85
+                }, {
+                    name: 'Edge',
+                    y: 4.67
+                }, {
+                    name: 'Safari',
+                    y: 4.18
+                }, {
+                    name: 'Sogou Explorer',
+                    y: 1.64
+                }, {
+                    name: 'Opera',
+                    y: 1.6
+                }, {
+                    name: 'QQ',
+                    y: 1.2
+                }, {
+                    name: 'Other',
+                    y: 2.61
+                }]
+            }]
+        });
+         */
+        /*]]>*/
+    </script>
+</div>
+</body>
+</html>

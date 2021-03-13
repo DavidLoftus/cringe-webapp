@@ -14,4 +14,6 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Integer> {
 
     @Query("SELECT p FROM Purchase p JOIN p.game g WHERE p.game.id = ?1")
     List<Purchase> purchaseByGameID(@Param("gameId") int gameId);
+
+    // Select date, cumulative
 }
