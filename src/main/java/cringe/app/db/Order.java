@@ -93,4 +93,12 @@ public class Order {
         }
         return cost;
     }
+
+    public Boolean isProcessing() {
+       return getStatus() == Status.processing;
+    }
+
+    public Boolean isCompleted() {
+        return getStatus() == Status.completed;
+    }
 }

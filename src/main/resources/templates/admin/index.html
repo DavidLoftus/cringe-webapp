@@ -16,13 +16,6 @@
 <body>
 <div th:replace="fragments/header :: header" class="globalHeader"></div>
 <div class="mainContent">
-    <!--
-    TODO(evanSpendlove):
-        - Add the option to upload games
-        - Add the option to view orders
-        - Add the option to edit games
-        - Add the option to view revenue (Extra thing: could offer basic analytics)
-    -->
     <div class="content">
         <div th:attr="onclick=|window.location = '${#paths.edit(game)}';|" th:each="game : ${ games }" class="game" th:style="|background-image: url(${#paths.get(game.icon)});|">
             <div class="game-bottom-bar">

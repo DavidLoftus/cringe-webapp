@@ -2,7 +2,6 @@ package cringe.app.controllers;
 
 import cringe.app.analytics.GameSale;
 import cringe.app.db.*;
-import cringe.app.util.PathsUtil;
 import cringe.app.util.UploadType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.view.RedirectView;
 import org.thymeleaf.util.StringUtils;
 
@@ -21,6 +19,7 @@ import java.security.Principal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/admin")
@@ -44,8 +43,13 @@ public class AdminController {
     @GetMapping
     public String adminPortal(Principal principal, Model model) {
         User user = userRepository.findByUsername(principal.getName());
-//        model.addAttribute("games", user.getGames());
-         model.addAttribute("games", gameRepository.findAll());
+        if(user.hasRole("root")) {
+            model.addAttribute("games", gameRepository.findAll());
+        } else {
+            model.addAttribute("games", gameRepository.findAll());
+            // TODO: Change: Non root users can only edit the games they sell.
+           //  model.addAttribute("games", user.getGames());
+        }
         return "admin/index.html";
     }
 
@@ -123,41 +127,19 @@ public class AdminController {
         return new RedirectView("/admin/game/" + id);
     }
 
-    /*
-        Problem: Modelling the relationship of: Seller -> Game
-        - Each game has a seller
-        - Each seller has multiple games
-        - Each purchase can comprise of multiple games at certain prices
-
-        Solution:
-        - Seller {one2many} Game
-        - Order {one2many} Purchase
-        - Purchase has a game id, title, price
-        - Order has a generateReceipt() method that is called for the orders.html page.
-
-        Benefits:
-        - Stores purchases only once
-        - Handles single and multiple purchases equally well
-        - Can handle querying total purchases per game, per user, etc. really well
-     */
-
-
     @GetMapping("/orders")
-    public String allOrders(Principal principal, Model model) {
+    public String orders(Principal principal, Model model) {
         User user = userRepository.findByUsername(principal.getName());
 
-        // TODO(evanSpendlove): only return orders for games that the seller owns
-        // Sellers only "own" games that they have uploaded.
         // Need to add checks so that sellers can't access purchase pages.
 
         List<Order> orders = new ArrayList<>();
-        // TODO(evanSpendlove): Change role to "seller"
-        if(user.hasRole("admin")) {
+        if(user.hasRole("root")) {
+            orders = orderRepository.findAll(Sort.by(Sort.Direction.ASC, "status"));
+        } else{
             for (Game g : user.getGames()) {
                 orders.addAll(orderRepository.findOrdersByGameId(g.getId()));
             }
-        } else{
-            orders = orderRepository.findAll(Sort.by(Sort.Direction.ASC, "status"));
         }
 
         model.addAttribute("orders", orders);
@@ -169,17 +151,32 @@ public class AdminController {
         User user = userRepository.findByUsername(principal.getName());
 
         List<GameSale> gameSales = new ArrayList<>();
-        // TODO(evanSpendlove): Change role to "seller"
-        if(user.hasRole("admin")) {
-            for (Game g : user.getGames()) {
-                float total = purchaseRepository.totalPurchasesByGameId(g.getId());
-                gameSales.add(new GameSale(g, total));
-            }
-        } else{
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        for (Game g : user.getGames()) {
+            float total = purchaseRepository.totalPurchasesByGameId(g.getId());
+            gameSales.add(new GameSale(g, total));
         }
 
         model.addAttribute("gameSales", gameSales);
         return "admin/analytics";
     }
+
+
+    @PostMapping("/refundOrder")
+    @ResponseStatus(value = HttpStatus.OK)
+    public void refund(@RequestParam int id) {
+        Order order = orderRepository.findOrderById(id);
+        order.setStatus(Order.Status.refunded);
+
+        User user = userRepository.findByUsername(order.getUser().getUsername());
+
+        // User no longer owns these games
+        Set<Game> games = user.getGames();
+        for(Purchase p : order.getPurchases()) {
+            games.remove(p.getGame());
+        }
+
+        user.setGames(games);
+        orderRepository.updateStatus(id, Order.Status.refunded);
+    }
+
 }

@@ -3,13 +3,11 @@ package cringe.app.security;
 import cringe.app.config.CringeConfig;
 import cringe.app.db.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 @Service
@@ -39,6 +37,11 @@ public class UserServiceImpl implements UserService {
             role_user.setName("user");
             role_user.setUsers(Collections.emptySet());
             roleRepository.save(role_user);
+
+            Role root_role = new Role();
+             root_role.setName("root");
+             root_role.setUsers(Collections.emptySet());
+            roleRepository.save( root_role);
         }
 
         if (config.isRootEnabled()) {
@@ -54,6 +57,7 @@ public class UserServiceImpl implements UserService {
 
             if (!rootUser.hasRole("admin")) {
                 rootUser.getRoles().add(roleRepository.getRoleByName("admin"));
+                rootUser.getRoles().add(roleRepository.getRoleByName("root"));
                 userRepository.save(rootUser);
             }
         }
