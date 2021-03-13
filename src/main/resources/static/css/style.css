@@ -34,11 +34,16 @@ body {
     background-color: #2a475e;
 }
 
+.box {
+    display: flex;
+    flex-flow: column;
+    height: 100vh;
+}
+
 .mainContent {
     background-color: #1b2838;
-    width: 100%;
-    height: 100%;
     position: relative;
+    flex: 1 1 auto;
 }
 
 .game {
@@ -49,8 +54,6 @@ body {
     float: left;
     margin: 4px 4px;
     z-index: 402;
-    background-size: 100%;
-    cursor: pointer;
 }
 
 .search-bar input {
