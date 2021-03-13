@@ -99,7 +99,7 @@ public class Game {
     }
 
     public String toString() {
-        return getTitle();
+        return String.format("Game(%d, \"%s\")", getId(), getTitle());
     }
 
     public Artifact getLogo() {

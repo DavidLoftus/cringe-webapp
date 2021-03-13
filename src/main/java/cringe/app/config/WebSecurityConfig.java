@@ -38,7 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     // Would be useful for allowing our css and js to be loaded for non-logged in users.
                     .antMatchers("/css/**", "/js/**", "/images/**").permitAll()
                     .antMatchers("/admin/**").hasAuthority("admin")
-                .antMatchers("/root/**").hasAuthority("root")
+                    .antMatchers("/root/**").hasAuthority("root")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
