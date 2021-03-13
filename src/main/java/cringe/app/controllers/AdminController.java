@@ -40,8 +40,15 @@ public class AdminController {
     private PurchaseRepository purchaseRepository;
 
     @GetMapping
-    public String adminPortal(Model model) {
-        model.addAttribute("games", gameRepository.findAll());
+    public String adminPortal(Principal principal, Model model) {
+        User user = userRepository.findByUsername(principal.getName());
+        if(!user.hasRole("admin")) {
+            // TODO: Should have an "access-denied page"
+            // TODO: Should have ~3 error pages: {404, 500, Access denied}
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        model.addAttribute("games", user.getGames());
+        // model.addAttribute("games", gameRepository.findAll());
         return "admin/index.html";
     }
 
@@ -102,10 +109,12 @@ public class AdminController {
         artifact.setContentType(file.getContentType());
         artifact = artifactRepository.save(artifact);
 
-        switch (type) {
-            case RELEASE -> game.setRelease(artifact);
-            case ICON -> game.setIcon(artifact);
+        if(type == UploadType.RELEASE) {
+           game.setRelease(artifact);
+        } else if (type == UploadType.ICON) {
+            game.setIcon(artifact);
         }
+
         gameRepository.save(game);
     }
 
