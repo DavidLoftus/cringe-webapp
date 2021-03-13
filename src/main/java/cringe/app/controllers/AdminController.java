@@ -1,12 +1,15 @@
 package cringe.app.controllers;
 
+import cringe.app.analytics.GameSale;
 import cringe.app.db.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.view.RedirectView;
 import org.thymeleaf.util.StringUtils;
 
@@ -14,6 +17,7 @@ import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
 import java.security.Principal;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -31,6 +35,9 @@ public class AdminController {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private PurchaseRepository purchaseRepository;
 
     @GetMapping
     public String adminPortal(Model model) {
@@ -123,9 +130,42 @@ public class AdminController {
 
     @GetMapping("/orders")
     public String allOrders(Principal principal, Model model) {
-        List<Order> orders = orderRepository.findAll(Sort.by(Sort.Direction.ASC, "status"));
+        User user = userRepository.findByUsername(principal.getName());
+
+        // TODO(evanSpendlove): only return orders for games that the seller owns
+        // Sellers only "own" games that they have uploaded.
+        // Need to add checks so that sellers can't access purchase pages.
+
+        List<Order> orders = new ArrayList<>();
+        // TODO(evanSpendlove): Change role to "seller"
+        if(user.hasRole("admin")) {
+            for (Game g : user.getGames()) {
+                orders.addAll(orderRepository.findOrdersByGameId(g.getId()));
+            }
+        } else{
+            orders = orderRepository.findAll(Sort.by(Sort.Direction.ASC, "status"));
+        }
 
         model.addAttribute("orders", orders);
         return "admin/orders";
+    }
+
+    @GetMapping("/analytics")
+    public String analytics(Principal principal, Model model) {
+        User user = userRepository.findByUsername(principal.getName());
+
+        List<GameSale> gameSales = new ArrayList<>();
+        // TODO(evanSpendlove): Change role to "seller"
+        if(user.hasRole("admin")) {
+            for (Game g : user.getGames()) {
+                float total = purchaseRepository.totalPurchasesByGameId(g.getId());
+                gameSales.add(new GameSale(g, total));
+            }
+        } else{
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        model.addAttribute("gameSales", gameSales);
+        return "admin/analytics";
     }
 }

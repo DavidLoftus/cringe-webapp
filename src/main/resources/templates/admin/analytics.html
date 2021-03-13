@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script type="text/javascript" src="/js/orders.js"></script>
-    <title>Orders</title>
+    <title>Analytics</title>
     <!--    <link rel="icon" type="image/svg+xml" href="/favicon.svg">-->
     <!--    <link rel="alternate icon" href="/favicon.ico">-->
 </head>
@@ -37,35 +37,21 @@
     </div>
 </div>
 <div class="mainContent">
-    <b class="text-center" style="color:white;">Orders:</b>
-
-    <!--
-    TODO(evanSpendlove): Alter to display analytics and only orders for that seller's books.
-    -->
+    <b class="text-center" style="color:white;">Game Sales:</b>
 
     <table class="table table-hover table-borderless">
         <thead class="thead-dark">
         <tr>
-            <th scope="col">Date</th>
-            <th scope="col">User</th>
-            <th scope="col">Details</th>
-            <th scope="col">Status</th>
+            <th scope="col">Game</th>
+            <th scope="col">Total Sales</th>
             <th scope="col">Price</th>
-            <th scope="col">Status</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:id="|order_row_${order.id}|" th:each="order : ${ orders }">
-            <td th:text="${#dates.format(order.date, 'dd-MMM-yyyy')}">01/01/0000></td>
-            <td th:text="${order.user.fullName}"></td>
-            <td th:text="${order.generateReceipt()}"></td>
-            <td th:id="|order_status_${order.id}|" th:text="${order.status}"></td>
-            <td><strong>$<strong th:text="${#numbers.formatDecimal(order.computeTotalCost(), 0, 'COMMA', 2, 'POINT')}"></strong></strong>
-            </td>
-            <td>
-                <!-- TODO(evanSpendlove): Add feature to change the status of an order -->
-                <button type="button" th:onclick="|refund(${ order.id })|">Update Status</button>
-            </td>
+        <tr th:each="sale : ${ gameSales }">
+            <td th:text="${sale.game.title}"></td>
+            <td><strong>$<strong th:text="${#numbers.formatDecimal(sale.totalSales, 0, 'COMMA', 2, 'POINT')}"></strong></strong></td>
+            <td><strong>$<strong th:text="${#numbers.formatDecimal(sale.game.price, 0, 'COMMA', 2, 'POINT')}"></strong></strong></td>
         </tr>
         </tbody>
     </table>
