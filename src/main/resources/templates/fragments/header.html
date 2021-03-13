@@ -36,6 +36,9 @@
                         <li sec:authorize="hasAuthority('admin')" class="nav-item">
                             <a class="nav-link links" href="/admin">Admin Portal</a>
                         </li>
+                        <li sec:authorize="hasAuthority('root')" class="nav-item">
+                            <a class="nav-link links" href="/root/users">Manage Users</a>
+                        </li>
                         <li sec:authorize="isAuthenticated()" class="nav-item">
                             <a class="nav-link links" href="/logout">Logout</a>
                         </li>
