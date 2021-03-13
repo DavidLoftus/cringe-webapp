@@ -2,6 +2,8 @@ package cringe.app.controllers;
 
 import cringe.app.analytics.GameSale;
 import cringe.app.db.*;
+import cringe.app.util.PathsUtil;
+import cringe.app.util.UploadType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -42,13 +44,8 @@ public class AdminController {
     @GetMapping
     public String adminPortal(Principal principal, Model model) {
         User user = userRepository.findByUsername(principal.getName());
-        if(!user.hasRole("admin")) {
-            // TODO: Should have an "access-denied page"
-            // TODO: Should have ~3 error pages: {404, 500, Access denied}
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
-        model.addAttribute("games", user.getGames());
-        // model.addAttribute("games", gameRepository.findAll());
+//        model.addAttribute("games", user.getGames());
+         model.addAttribute("games", gameRepository.findAll());
         return "admin/index.html";
     }
 
@@ -93,14 +90,8 @@ public class AdminController {
         return new RedirectView("/admin/game/" + id);
     }
 
-    public enum UploadType {
-        RELEASE,
-        ICON,
-        BANNER,
-    }
-
     @PostMapping("/game/{id}/upload")
-    public void uploadFile(@PathVariable int id, @RequestParam("file") MultipartFile file, @RequestParam UploadType type) throws IOException, SQLException {
+    public RedirectView uploadFile(@PathVariable int id, @RequestParam("file") MultipartFile file, @RequestParam UploadType type) throws IOException, SQLException {
         Game game = gameRepository.findGameById(id);
 
         Artifact artifact = new Artifact();
@@ -109,13 +100,27 @@ public class AdminController {
         artifact.setContentType(file.getContentType());
         artifact = artifactRepository.save(artifact);
 
-        if(type == UploadType.RELEASE) {
-           game.setRelease(artifact);
-        } else if (type == UploadType.ICON) {
-            game.setIcon(artifact);
+        switch(type) {
+            case RELEASE:
+                game.setRelease(artifact);
+                break;
+            case ICON:
+                game.setIcon(artifact);
+                break;
+            case BANNER:
+                game.setBanner(artifact);
+                break;
+            case LOGO:
+                game.setLogo(artifact);
+                break;
+            case BACKGROUND:
+                game.setBackground(artifact);
+                break;
         }
 
         gameRepository.save(game);
+
+        return new RedirectView("/admin/game/" + id);
     }
 
     /*

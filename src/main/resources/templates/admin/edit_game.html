@@ -1,36 +1,94 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-<!--/*@thymesVar id="games" type="java.util.Collection<cringe.app.db.Game>"*/-->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="game" type="cringe.app.db.Game"*/-->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <!--    <link rel="icon" type="image/svg+xml" href="/favicon.svg">-->
-    <!--    <link rel="alternate icon" href="/favicon.ico">-->
-    <title>Edit Game</title>
+    <link rel="stylesheet" type="text/css" href="/css/view.css">
+
+
+    <title th:text="${game.title}">DOOM</title>
 </head>
 <body>
-<div th:replace="fragments/header :: header" class="globalHeader"></div>
-<div class="mainContent">
+<div th:replace="fragments/header :: header" class="globalHeader">
     <div class="content">
-        <form id="edit-form" method="POST">
-            <h2 class="form-heading">Edit Game Details</h2>
-            <div class="form-group">
-                <label for="title">Title</label>
-                <input th:value="${game.title}" name="title" type="text" class="form-control" id="title"/>
-                <label for="description">Description</label>
-                <textarea name="description" form="edit-form" class="form-control" id="description" th:text="${game.description}"></textarea>
-                <label for="price">Price (€)</label>
-                <input name="price" type="number" step="0.01" min="0.00" class="form-control" id="price" th:value="${game.price}"/>
-                <button class="btn btn-lg btn-primary btn-block" type="submit">Update Game Details</button>
-            </div>
-        </form>
+        <div class="navbarContent">
+            <nav class="navbar navbar-expand-lg">
+                <a class="navbar-brand" href="#"><img src="/images/cringe.png" class="logo"></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+                        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link links" href="#">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link links" href="/login">Login</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
     </div>
 </div>
+<div class="box">
+    <div class="mainContent">
+        <div class="content">
+            <form id="edit-form" method="POST">
+                <input th:value="${game.title}" name="title" type="text" class="form-control" id="title"/>
+                <div class="item-banner">
+                    <div class="banner-image">
+                        <img th:src="${#paths.get(game.banner)}">
+                    </div>
+                    <div class="banner-description">
+                        <img th:src="${#paths.get(game.logo)}">
+                        <p id="desc">
+                            <textarea height name="description" form="edit-form" class="form-control" id="description"
+                                      th:text="${game.description}"></textarea>
+                        </p>
+                    </div>
+                </div>
+                <div class="purchase">
+                    <h1></h1>
+                    <div class="lower-purchase">
+                        <div class="purchase-bottom">
+                            <div class="purchase-price">
+                                <input name="price" type="number" step="0.01" min="0.00" class="form-control" id="price"
+                                       th:value="${game.price}"/>
+                            </div>
+                            <div class="purchase-button">
+                                <input class="btn" style="width: 75pt; height: 30pt;" type="submit" value="Save">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+            <form id="upload-form" method="post" enctype="multipart/form-data" th:action="${#paths.upload(game)}">
+                <label>
+                    Upload type:
+                    <select name="type" form="upload-form">
+                        <option th:each="state : ${T(cringe.app.util.UploadType).values()}"
+                                th:value="${state}"
+                                th:text="${#strings.capitalize(#strings.toLowerCase(state))}">
+                        </option>
+                    </select>
+                </label>
+                <label>
+                    <input type="file" name="file">
+                </label>
+                <input type="submit" value="Upload">
+            </form>
+        </div>
+        <img class="game-bg mask" th:src="${#paths.get(game.background)}">
+    </div>
+</div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"

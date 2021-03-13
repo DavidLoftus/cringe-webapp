@@ -120,6 +120,7 @@ img {
     width: 305px;
     object-fit: contain;
     float: right;
+    max-height: 60%;
 }
 
 #desc {
@@ -196,4 +197,40 @@ img {
     text-decoration: none !important;
     color: #d2efa9;
     background: linear-gradient( to right, #8ed629 5%, #6aa621 95%);
+}
+
+.search-bar input {
+    border-radius: 2px;
+    background-color: #272a31;
+    border: solid 1px #373a41;
+    height: 40px;
+    color: white;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+#title {
+    max-width: 35%;
+    background: none;
+    color: white;
+}
+
+#desc textarea {
+    height: 140pt;
+    background: none;
+    color: white;
+}
+
+#price {
+    max-width: 50pt;
 }
