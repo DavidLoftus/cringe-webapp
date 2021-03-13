@@ -26,10 +26,8 @@ public class OrderController {
         model.addAttribute("user", user);
         model.addAttribute("orders", orderRepository.findOrdersByUser(user));
 
+        // Simulate payment processing
         for(Order o: orderRepository.findOrdersByUser(user)) {
-            if(o.getStatus() == Order.Status.pending) {
-                orderRepository.updateStatus(o.getId(), Order.Status.processing);
-            }
             if(o.getStatus() == Order.Status.processing) {
                 orderRepository.updateStatus(o.getId(), Order.Status.completed);
             }
@@ -38,8 +36,8 @@ public class OrderController {
         // TODO(evanSpendlove): Remove these print statements
         for(Order o: orderRepository.findOrdersByUser(user)) {
             System.out.println("Order: " + o.getId() + ", status: " + o.getStatus());
-            System.out.println("Order: " + o.getId() + ", receipt: " + o.getReceipt());
-            System.out.println("Order: " + o.getId() + ", totalCost: " + o.getTotalCost());
+            System.out.println("Order: " + o.getId() + ", receipt: " + o.generateReceipt());
+            System.out.println("Order: " + o.getId() + ", totalCost: " + o.computeTotalCost());
         }
 
         System.out.println(user.getGames());
@@ -57,8 +55,8 @@ public class OrderController {
 
         // User no longer owns these games
         Set<Game> games = user.getGames();
-        for(Game g: order.getCart().getGames()) {
-            games.remove(g);
+        for(Purchase p : order.getPurchases()) {
+            games.remove(p.getGame());
         }
 
         user.setGames(games);

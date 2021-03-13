@@ -48,8 +48,8 @@
         <tbody>
         <tr th:id="|order_row_${order.id}|" th:each="order : ${ orders }">
             <td th:text="${#dates.format(order.date, 'dd-MMM-yyyy')}">01/01/0000></td>
-            <td th:text="${order.receipt}"></td>
-            <td><strong>$<strong th:text="${#numbers.formatDecimal(order.totalCost, 0, 'COMMA', 2, 'POINT')}"></strong></strong>
+            <td th:text="${order.generateReceipt()}"></td>
+            <td><strong>$<strong th:text="${#numbers.formatDecimal(order.computeTotalCost(), 0, 'COMMA', 2, 'POINT')}"></strong></strong>
             <td th:id="|order_status_${order.id}|" th:text="${order.status}"></td>
             </td>
             <td>

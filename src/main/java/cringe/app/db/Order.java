@@ -2,10 +2,15 @@ package cringe.app.db;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="orders")
 public class Order {
+    public enum Status {
+        processing, completed, refunded
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -13,12 +18,8 @@ public class Order {
     @ManyToOne
     private User user;
 
-    @OneToOne
-    private Cart cart;
-
-    public enum Status {
-        pending, processing, completed, refunded
-    }
+    @OneToMany
+    private List<Purchase> purchases;
 
     @Column
     private Status status;
@@ -26,22 +27,15 @@ public class Order {
     @Column
     private Date date;
 
-    @Column
-    private String receipt;
-
-    @Column
-    private float totalCost;
-
     public Order() {
-        this.status = Status.pending;
+        this.status = Status.processing;
     }
 
-    public Order(Date date, User user, Cart cart) {
+    public Order(Date date, User user, List<Purchase> purchases) {
         setDate(date);
         setUser(user);
-        setCart(cart);
-        setReceipt(cart);
-        this.status = Status.pending;
+        setPurchases(purchases);
+        this.status = Status.processing;
     }
 
     public int getId() {
@@ -60,13 +54,12 @@ public class Order {
         this.user = user;
     }
 
-    public Cart getCart() {
-        return cart;
+    public List<Purchase> getPurchases() {
+        return purchases;
     }
 
-    public void setCart(Cart cart) {
-        this.cart = cart;
-        computeTotalCost();
+    public void setPurchases(List<Purchase> purchases) {
+        this.purchases = purchases;
     }
 
     public Date getDate() {
@@ -77,14 +70,6 @@ public class Order {
         this.date = date;
     }
 
-    public float getTotalCost() {
-        return totalCost;
-    }
-
-    public void setTotalCost(float totalCost) {
-        this.totalCost = totalCost;
-    }
-
     public Status getStatus() {
         return status;
     }
@@ -93,24 +78,19 @@ public class Order {
         this.status = status;
     }
 
-    public String getReceipt() {
-        return receipt;
-    }
-
-    public void setReceipt(Cart cart) {
-        computeTotalCost();
+    public String generateReceipt() {
         StringBuilder rec = new StringBuilder();
-        for(Game g: cart.getGames()) {
-            rec.append(g.getTitle()).append(": €").append(String.format("%.2f", g.getPrice())).append("\n");
+        for(Purchase p: getPurchases()) {
+            rec.append(p.getGame().getTitle()).append(": €").append(String.format("%.2f", p.getPrice())).append("\n");
         }
-        this.receipt = rec.append("Total: €").append(String.format("%.2f", getTotalCost())).toString();
+        return rec.append("Total: €").append(String.format("%.2f", computeTotalCost())).toString();
     }
 
-    public void computeTotalCost() {
-        int cost = 0;
-        for(Game g: getCart().getGames()) {
-            cost += g.getPrice();
+    public float computeTotalCost() {
+        float cost = 0;
+        for(Purchase p : getPurchases()) {
+            cost += p.getPrice();
         }
-        setTotalCost(cost);
+        return cost;
     }
 }

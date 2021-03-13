@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import org.thymeleaf.util.StringUtils;
 
@@ -102,6 +101,24 @@ public class AdminController {
         }
         gameRepository.save(game);
     }
+
+    /*
+        Problem: Modelling the relationship of: Seller -> Game
+        - Each game has a seller
+        - Each seller has multiple games
+        - Each purchase can comprise of multiple games at certain prices
+
+        Solution:
+        - Seller {one2many} Game
+        - Order {one2many} Purchase
+        - Purchase has a game id, title, price
+        - Order has a generateReceipt() method that is called for the orders.html page.
+
+        Benefits:
+        - Stores purchases only once
+        - Handles single and multiple purchases equally well
+        - Can handle querying total purchases per game, per user, etc. really well
+     */
 
 
     @GetMapping("/orders")

@@ -10,9 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.security.Principal;
-import java.util.Date;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 @RequestMapping("/cart")
@@ -29,6 +27,9 @@ public class CartController {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private PurchaseRepository purchaseRepository;
 
     @GetMapping
     public String viewCart(Principal principal, Model model) {
@@ -107,12 +108,23 @@ public class CartController {
         }
         user.setGames(userGames);
 
-        Order order = new Order(new Date(), user, cart);
+        List<Purchase> purchases = new ArrayList<>();
+        for(Game g: cart.getGames()) {
+            Purchase p = new Purchase(g);
+            purchases.add(p);
+            purchaseRepository.save(p);
+        }
+
+        Order order = new Order(new Date(), user, purchases);
         orderRepository.save(order);
+
 
         Cart emptyCart = new Cart();
         user.setCart(emptyCart);
         cartRepository.save(emptyCart);
+
+        // Delete old cart.
+        cartRepository.delete(cart);
 
         return new RedirectView("/orders");
     }
