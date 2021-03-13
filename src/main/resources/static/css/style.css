@@ -1,148 +1,153 @@
-body{
-	width: 100%;
-	background-color: #1b2838;
+body {
+    width: 100%;
+    background-color: #1b2838;
 }
 
 .globalHeader {
-	background-color: #171a21;
-	height: 104px;
-	min-width: 940px;
-	padding-left: 16px;
-	padding-right: 16px;
-	margin: 0;
+    background-color: #171a21;
+    height: 104px;
+    min-width: 940px;
+    padding-left: 16px;
+    padding-right: 16px;
+    margin: 0;
 }
 
 .content {
-	width: 940px;
-	height: 100%;
-	position: relative;
-	right: 0;
-	margin: 0px auto;
-	z-index: 402;
-	color: #ffffff;
+    width: 940px;
+    height: 100%;
+    position: relative;
+    right: 0;
+    margin: 0px auto;
+    z-index: 402;
+    color: #ffffff;
 }
 
 .mainNav {
-	padding-top: 30px;
-	margin-right: 40px;
-	width: 176px;
-	height: 44px;
+    padding-top: 30px;
+    margin-right: 40px;
+    width: 176px;
+    height: 44px;
 }
 
 .banner {
-	height: 450px;
-	background-color: #2a475e;
+    height: 450px;
+    background-color: #2a475e;
 }
 
-.mainContent{
-	background-color: #1b2838;
-	width: 100%;
-	height: 100%;
-	position: relative;
+.mainContent {
+    background-color: #1b2838;
+    width: 100%;
+    height: 100%;
+    position: relative;
 }
 
 .game {
-	width: 305px;
-	height: 305px;
-	background-color: #ffffff;
-	position: relative;
-	float: left;
-	margin: 4px 4px;
-	z-index: 402;
-	background-size: 100%;
-	cursor: pointer;
-}
-
-.search-result {
-	width: auto;
-	height: 100px;
-	background-color: #171a21;
-	position: relative;
-	margin: 4px 4px;
-	z-index: 402;
-	background-size: 100%;
-	cursor: pointer;
-}
-
-.game-small-icon {
-	max-height: 100%;
-	float: left;
-}
-
-.game-bottom-bar {
-	height: 20%;
-	background-color: #2a475e;
-	opacity: 97.5%;
-	position: absolute;
-	width: 100%;
-	bottom: 0;
-
-	display: flex;
-	justify-content: center;
-	align-content: center;
-	flex-direction: row;
-
-	font-size: 20pt;
-	line-height: 45pt;
-}
-
-.game:hover .game-bottom-bar {
-	background-color: #1b2838;
-}
-
-.game-title-column {
-	width: 70%;
-}
-
-.game-price-column {
-	background-color: cyan;
-	width: 30%;
-	text-align: center;
-	opacity: 50%;
-}
-
-.navbarContent {
-	padding-top: 15px;
-}
-
-.logo {
-	width: 176px;
-	height: 100%;
-}
-
-.links {
-	/*color: #7c7c7c;*/
-	color: #c5c3c0;
+    width: 305px;
+    height: 305px;
+    background-color: #ffffff;
+    position: relative;
+    float: left;
+    margin: 4px 4px;
+    z-index: 402;
+    background-size: 100%;
+    cursor: pointer;
 }
 
 .search-bar input {
-	border-radius: 2px;
-	background-color: #272a31;
-	border: solid 1px #373a41;
-	height: 40px;
-	color: white;
+    border-radius: 2px;
+    background-color: #272a31;
+    border: solid 1px #373a41;
+    height: 40px;
+    color: white;
+}
+
+.search-result {
+    width: auto;
+    height: 100px;
+    background-color: #171a21;
+    position: relative;
+    margin: 4px 4px;
+    z-index: 402;
+    background-size: 100%;
+    cursor: pointer;
+}
+
+.game-small-icon {
+    max-height: 100%;
+    float: left;
+}
+
+.game-bottom-bar {
+    height: 20%;
+    background-color: #2a475e;
+    opacity: 97.5%;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: row;
+
+    font-size: 20pt;
+    line-height: 45pt;
+}
+
+.game:hover .game-bottom-bar {
+    background-color: #1b2838;
+}
+
+.game-title-column {
+    width: 70%;
+}
+
+.game-price-column {
+    background-color: cyan;
+    width: 30%;
+    text-align: center;
+    opacity: 50%;
+}
+
+.navbarContent {
+    padding-top: 15px;
+}
+
+.logo {
+    width: 176px;
+    height: 100%;
+}
+
+.links {
+    /*color: #7c7c7c;*/
+    color: #c5c3c0;
 }
 
 .links:hover {
-	color: #ffffff;
+    color: #ffffff;
 }
 
 @keyframes spinning {
-	from { transform: rotate(0deg) }
-	to { transform: rotate(360deg) }
+    from {
+        transform: rotate(0deg)
+    }
+    to {
+        transform: rotate(360deg)
+    }
 }
+
 .spin {
-	animation-name: spinning;
-	animation-duration: 4s;
-	animation-iteration-count: infinite;
-	animation-timing-function: linear;
+    animation-name: spinning;
+    animation-duration: 4s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
 }
 
 th, tr, td {
-	color: white;
-	text-color: white;
+    color: white;
+    text-color: white;
 }
 
 td {
-	white-space:pre
+    white-space: pre
 }
