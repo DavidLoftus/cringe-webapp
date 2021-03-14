@@ -18,6 +18,11 @@
             padding: 0;
         }
     </style>
+
+    <script th:if="${game.visibility == game.visibility.PREORDER}">
+        alert("This game is not yet released.");
+        window.close()
+    </script>
 </head>
 <body>
 <div id="jsdos"></div>
