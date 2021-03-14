@@ -53,7 +53,7 @@
 <div class="mainContent">
     <div class="content">
         <h1>Your Shopping Cart</h1>
-        <div th:id="|game_${game.id}|" th:each="game : ${ user.cart.games }" class="cart-item">
+        <div th:id="|game_${game.id}|" th:each="game : ${ cart.games }" class="cart-item">
             <div class="cart-item-image">
                 <a th:attr="href=${#paths.view(game)}">
                     <img th:src="${#paths.get(game.logo)}">
@@ -67,9 +67,9 @@
                 GTA V
             </div>
         </div>
-        <div th:if="${cartFull}" class="cart-payment">
+        <div th:if="${!cart.games.isEmpty()}" class="cart-payment">
             <div class="total">
-                <div id="totalPrice" class="total-price" th:text="${#numbers.formatDecimal(totalCost, 0, 'COMMA', 2, 'POINT') + '€'}">
+                <div id="totalPrice" class="total-price" th:text="${#numbers.formatDecimal(cart.totalCost, 0, 'COMMA', 2, 'POINT') + '€'}">
                     30.00€
                 </div>
                 Estimated Total

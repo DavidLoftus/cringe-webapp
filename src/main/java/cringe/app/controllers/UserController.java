@@ -5,6 +5,7 @@ import cringe.app.db.UserRepository;
 import cringe.app.security.SecurityService;
 import cringe.app.security.UserService;
 import cringe.app.security.UserValidator;
+import cringe.app.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.security.Principal;
 
@@ -22,6 +24,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CartService cartService;
 
     @Autowired
     private SecurityService securityService;
@@ -48,13 +53,17 @@ public class UserController {
         }
 
         userService.save(userForm);
+
         securityService.autoLogin(userForm.getUsername(), userForm.getPasswordConfirm());
+        cartService.sync(userForm::getUsername);
+
         return "redirect:/";
     }
 
     @GetMapping("/login")
-    public String login(Model model, String error, String logout) {
+    public String login(Principal principal, Model model, String error, String logout) {
         if (securityService.isAuthenticated()) {
+            cartService.sync(principal);
             return "redirect:/";
         }
 

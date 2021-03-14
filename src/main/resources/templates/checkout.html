@@ -51,7 +51,7 @@
             <span class="text-muted">Your cart</span>
           </h4>
           <ul class="list-group mb-3">
-            <div th:each="game : ${ user.cart.games }">
+            <div th:each="game : ${ cart.games }">
               <li class="list-group-item d-flex justify-content-between lh-sm">
                 <div>
                   <h6 class="my-0 text-muted" th:text="${game.title}" th:attr="href=${#paths.view(game)}">Product name</h6>
@@ -63,7 +63,7 @@
             <li class="list-group-item d-flex justify-content-between">
               <span id="total" class="text-muted">Total</span>
               <strong class="text-muted">$<strong class="text-muted"
-                  th:text="${#numbers.formatDecimal(totalCost, 0, 'COMMA', 2, 'POINT')}">$999</strong></strong>
+                  th:text="${#numbers.formatDecimal(cart.totalCost, 0, 'COMMA', 2, 'POINT')}">$999</strong></strong>
             </li>
           </ul>
         </div>

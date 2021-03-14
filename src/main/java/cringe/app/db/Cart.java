@@ -34,4 +34,8 @@ public class Cart {
     public void setGames(List<Game> games) {
         this.games = games;
     }
+
+    public float getTotalCost() {
+        return (float) getGames().stream().mapToDouble(Game::getPrice).sum();
+    }
 }
