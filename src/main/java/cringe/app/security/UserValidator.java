@@ -1,4 +1,4 @@
-package cringe.app.controllers;
+package cringe.app.security;
 
 import cringe.app.db.User;
 import cringe.app.security.UserService;

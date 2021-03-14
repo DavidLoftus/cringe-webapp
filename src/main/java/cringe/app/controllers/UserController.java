@@ -4,6 +4,7 @@ import cringe.app.db.User;
 import cringe.app.db.UserRepository;
 import cringe.app.security.SecurityService;
 import cringe.app.security.UserService;
+import cringe.app.security.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

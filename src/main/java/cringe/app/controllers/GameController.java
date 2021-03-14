@@ -30,7 +30,7 @@ public class GameController {
         }
 
         User user = userRepository.findByUsername(principal.getName());
-        return user.getGames().contains(game) || user.hasRole("admin");
+        return user.getGames().contains(game);// || user.hasRole("admin");
     }
 
     @GetMapping("/{id}")

@@ -7,6 +7,10 @@ import java.util.Set;
 @Table(name = "games")
 public class Game {
 
+    public enum Visibility {
+        RELEASED, PREORDER, PRIVATE
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -34,6 +38,9 @@ public class Game {
 
     @Column
     private Float price;
+
+    @Column
+    private Visibility visibility = Visibility.PRIVATE;
 
     @Lob
     @Column
@@ -104,7 +111,7 @@ public class Game {
 
     public Artifact getLogo() {
         if (logo == null) {
-            return icon;
+            return getBanner();
         }
         return logo;
     }
@@ -133,5 +140,13 @@ public class Game {
 
     public void setBackground(Artifact background) {
         this.background = background;
+    }
+
+    public Visibility getVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(Visibility visibility) {
+        this.visibility = visibility;
     }
 }

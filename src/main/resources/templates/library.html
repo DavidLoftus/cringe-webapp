@@ -15,12 +15,6 @@
     <!--    <link rel="alternate icon" href="/favicon.ico">-->
 
     <title>Library</title>
-
-    <script>
-        function openGame(path) {
-            window.open(path, )
-        }
-    </script>
 </head>
 <body>
 <div th:replace="fragments/header :: header" class="globalHeader">
@@ -49,7 +43,7 @@
 <div class="mainContent">
     <div class="content">
         <h2> Games </h2>
-        <div th:attr="onclick=|window.location = '${#paths.play(game)}';|" th:each="game : ${ user.games }" class="game" th:style="|background-image: url(${#paths.get(game.icon)});|">
+        <div th:attr="onclick=|window.open('${#paths.play(game)}', 'play_${game.id}', 'width=1280,height=720');|" th:each="game : ${ user.games }" class="game" th:style="|background-image: url(${#paths.get(game.icon)});|">
             <div class="game-bottom-bar">
                 <div class="game-title-column" th:text="${game.title}">
                 </div>

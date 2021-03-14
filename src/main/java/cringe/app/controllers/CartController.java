@@ -49,7 +49,7 @@ public class CartController {
 
         Optional<Game> maybeGame = gameRepository.findById(id);
 
-        if (maybeGame.isEmpty() || user.hasRole("admin")) {
+        if (maybeGame.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 

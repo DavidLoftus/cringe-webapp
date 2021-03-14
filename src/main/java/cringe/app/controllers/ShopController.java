@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.Principal;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class ShopController {
@@ -28,11 +30,26 @@ public class ShopController {
     public GameRepository gameRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    public UserRepository userRepository;
+
+    private boolean isGameVisible(Principal principal, Game game) {
+        if (game.getVisibility() != Game.Visibility.PRIVATE) {
+            return true;
+        } else if (principal != null) {
+            User user = userRepository.findByUsername(principal.getName());
+            return user.getGames().contains(game);
+        }
+        return false;
+    }
+
+    private List<Game> filterVisibleGames(Principal principal, List<Game> games) {
+        return games.stream().filter(game -> isGameVisible(principal, game)).collect(Collectors.toList());
+    }
 
     @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("games", gameRepository.findAll());
+    public String index(Principal principal, Model model) {
+        List<Game> games = gameRepository.findAll();
+        model.addAttribute("games", filterVisibleGames(principal, games));
         return "index";
     }
 
@@ -52,9 +69,9 @@ public class ShopController {
     }
 
     @GetMapping("/search")
-    public String search(@RequestParam String query, Model model) {
+    public String search(@RequestParam String query, Principal principal, Model model) {
         List<Game> games = gameRepository.search(query);
-        model.addAttribute("games", games);
+        model.addAttribute("games", filterVisibleGames(principal, games));
         return "search";
     }
 }
