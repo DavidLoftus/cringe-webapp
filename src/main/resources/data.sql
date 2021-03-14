@@ -26,8 +26,9 @@ INSERT INTO GAMES(TITLE, DESCRIPTION, RELEASE_ID, ICON_ID, BANNER_ID, LOGO_ID, B
 
 INSERT INTO ARTIFACTS VALUES(7, 'application/x-zip-compressed', '', 'mspacpc.zip');
 INSERT INTO ARTIFACTS VALUES(8, 'image/jpeg', FILE_READ('./games/cod.jpg'), 'cod.jpg');
-INSERT INTO ARTIFACTS VALUES(12, 'image/png', FILE_READ('./games/cod-banner.png'), 'cod-banner.png');
-INSERT INTO GAMES(TITLE, DESCRIPTION, RELEASE_ID, ICON_ID, BANNER_ID, PRICE, VISIBILITY) VALUES ('Call of Duty', 'Welcome to 2065. A new breed of Black Ops soldier emerges and the lines are blurred between our own humanity and the cutting-edge military robotics that define the future of combat.', 7, 8, 12, 50, 1);
+INSERT INTO ARTIFACTS VALUES(12, 'image/png', FILE_READ('./games/cod-logo.png'), 'cod-logo.png');
+INSERT INTO ARTIFACTS VALUES(17, 'image/jpeg', FILE_READ('./games/cod-banner.jpg'), 'cod-banner.jpg');
+INSERT INTO GAMES(TITLE, DESCRIPTION, RELEASE_ID, ICON_ID, LOGO_ID, BANNER_ID, PRICE, VISIBILITY) VALUES ('Call of Duty', 'Welcome to 2065. A new breed of Black Ops soldier emerges and the lines are blurred between our own humanity and the cutting-edge military robotics that define the future of combat.', 7, 8, 12, 17, 50, 1);
 
 -- INSERT INTO CARTS VALUES(1);
 -- INSERT INTO CARTS_GAMES VALUES(1, 1);
