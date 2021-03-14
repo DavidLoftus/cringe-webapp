@@ -54,6 +54,8 @@ body {
     float: left;
     margin: 4px 4px;
     z-index: 402;
+    cursor: pointer;
+    background-size: 100%;
 }
 
 .search-bar input {

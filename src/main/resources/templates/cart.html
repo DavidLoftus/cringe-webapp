@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/*@thymesVar id="user" type="cringe.app.db.User"*/-->
+<!--/*@thymesVar id="totalCost" type="java.lang.Float"*/-->
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>Cart</title>
+    <link rel="stylesheet" type="text/css" href="/css/cart.css">
+
+
     <script>
         function removeFromCart(id) {
             fetch('/cart/remove', {
@@ -27,7 +30,7 @@
                     totalPrice.innerText = (parseFloat(totalPrice.innerText) - gamePrice).toFixed(2);
 
                     // Remove row
-                    const row = document.getElementById('game_row_' + id);
+                    const row = document.getElementById('game_' + id);
                     row.remove();
 
                     // If cart is empty, remove checkout button
@@ -40,60 +43,46 @@
             })
         }
     </script>
+
+    <title>Cringe Games</title>
 </head>
 <body>
-<div th:replace="fragments/header :: header" class="globalHeader">
+<div th:replace="fragments/header :: header" class="globalHeader"></div>
+
+
+<div class="mainContent">
     <div class="content">
-        <div class="navbarContent">
-            <nav class="navbar navbar-expand-lg">
-                <a class="navbar-brand" href="/"><img src="/images/cringe.png" class="logo"></a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
-                        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link links" href="#">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link links" href="/login">Login</a>
-                        </li>
-                    </ul>
+        <h1>Your Shopping Cart</h1>
+        <div th:id="|game_${game.id}|" th:each="game : ${ user.cart.games }" class="cart-item">
+            <div class="cart-item-image">
+                <a th:attr="href=${#paths.view(game)}">
+                    <img th:src="${#paths.get(game.logo)}">
+                </a>
+            </div>
+            <div class="cart-item-price">
+                <div class="price" th:id="|game_price_${game.id}|" th:text="${#numbers.formatDecimal(game.price, 0, 'COMMA', 2, 'POINT') + '€'}">30.00€</div>
+                <a class="links" th:onclick="|removeFromCart(${ game.id })|">Remove</a>
+            </div>
+            <div class="cart-item-name" th:text="${game.title}">
+                GTA V
+            </div>
+        </div>
+        <div th:if="${cartFull}" class="cart-payment">
+            <div class="total">
+                <div class="total-price" th:text="${#numbers.formatDecimal(totalCost, 0, 'COMMA', 2, 'POINT') + '€'}">
+                    30.00€
                 </div>
-            </nav>
+                Estimated Total
+            </div>
+            <div class="buttons">
+                <a class="big-buy-button" href="doCheckoutStuff">
+                    <span>Checkout</span>
+                </a>
+            </div>
         </div>
     </div>
 </div>
-<div class="mainContent">
-    <b class="text-center" style="color:white;">Games:</b>
-        <table id="cart" class="table table-hover table-borderless">
-            <thead class="thead-dark">
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Price (€)</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:id="|game_row_${game.id}|" th:each="game : ${ user.cart.games }">
-            <td><a th:text="${game.title}" th:attr="href=${#paths.view(game)}">Doom</a></td>
-            <td th:id="|game_price_${game.id}|" th:text="${#numbers.formatDecimal(game.price, 0, 'COMMA', 2, 'POINT')}"></td>
-            <td>
-                <button th:onclick="|removeFromCart(${ game.id })|">Remove</button>
-            </td>
-        </tr>
-        </tbody>
-        <tfoot>
-        <tr>
-            <th id="total">Total :</th>
-            <td id="totalPrice" th:text="${#numbers.formatDecimal(totalCost, 0, 'COMMA', 2, 'POINT')}"></td>
-        </tr>
-        </tfoot>
-    </table>
-    <p th:text="${cartFull}"></p>
-    <form th:if="${cartFull}" method="GET" action="/cart/checkout">
-        <button th:if="${cartFull}" class="w-100 btn btn-primary btn-lg" id="btn-checkout" type="submit">Continue to checkout</button>
-    </form>
-</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
 </body>
 </html>
