@@ -1,14 +1,58 @@
-/*
-   TODO:
-    - form input widths are off
-    - Big 'sign in' title
-    - Pad form down a bit
-    - Style form inputs
-    - Style sign-in button
-    - Style register account button and re-position
- */
-
-* {
-    color: white;
+.login-area {
+	width: 50%;
+	margin: 20px auto;
+	text-align: center;
 }
 
+.form-box{
+	background-color: rgba(25, 25, 25, 1);
+	width: 50%;
+	margin: 10px auto;
+	
+}
+
+.form-control {
+	border-radius: 0px;
+	color: #ffffff;
+	border: none;
+}
+input[type=text]:focus, input[type=password]:focus {
+	background-color: rgba(25, 25, 25, 1);
+	color: #ffffff;
+}
+
+.login-area .btn {
+	margin-top: 10px;
+	width: 35%;
+	height: 50%;
+	background: linear-gradient( to right, #47bfff 5%, #1a44c2 60%);
+}
+
+.login-area .btn:hover {
+	width: 35%;
+	background: linear-gradient( to right, #39a0d8 5%, #1539a3 60%);
+}
+
+.login-area a {
+	text-decoration: none;
+	color: #a5a5a5;
+}
+
+.login-area a:hover {
+	color: #7e7e7e;
+}
+
+.login-area h4 {
+	margin-top: 10px;
+	font-size: 15px;
+	
+}
+
+.login-area label {
+	position: relative;
+	left: -80px;
+}
+
+.has-error {
+	color: #FF3535;
+}

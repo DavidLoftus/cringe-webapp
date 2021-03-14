@@ -17,9 +17,7 @@ import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
 import java.security.Principal;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 @RequestMapping("/admin")
@@ -131,8 +129,6 @@ public class AdminController {
     public String orders(Principal principal, Model model) {
         User user = userRepository.findByUsername(principal.getName());
 
-        // Need to add checks so that sellers can't access purchase pages.
-
         List<Order> orders = new ArrayList<>();
         if(user.hasRole("root")) {
             orders = orderRepository.findAll(Sort.by(Sort.Direction.ASC, "status"));
@@ -150,13 +146,51 @@ public class AdminController {
     public String analytics(Principal principal, Model model) {
         User user = userRepository.findByUsername(principal.getName());
 
+        List<Game> games = gameRepository.findAll();
+
         List<GameSale> gameSales = new ArrayList<>();
-        for (Game g : user.getGames()) {
-            float total = purchaseRepository.totalPurchasesByGameId(g.getId());
+        for (Game g : games) {
+            float total = 0f;
+            if(purchaseRepository.purchaseByGameID(g.getId()).size() > 0) {
+                total = purchaseRepository.totalPurchasesByGameId(g.getId());
+            }
             gameSales.add(new GameSale(g, total));
         }
 
+        Map<Game, Map<Date, Float>> sales = new HashMap<>();
+        for (Game g : games) {
+            Map<Date, Float> salesForGame = new HashMap<>();
+            List<Order> orders = orderRepository.findOrdersByGameId(g.getId());
+            for(Order o : orders) {
+                for(Purchase p : o.getPurchases()) {
+                    if(p.getGame() == g) {
+                        if(sales.containsKey(o.getDate())){
+                            Float cur = salesForGame.get(o.getDate());
+                            salesForGame.put(o.getDate(), cur + p.getPrice());
+                        } else {
+                            salesForGame.put(o.getDate(), p.getPrice());
+                        }
+                    }
+                }
+            }
+            sales.put(g, salesForGame);
+        }
+        System.out.println(sales);
+
+        Map<String, Float> totalPerGame = new HashMap<>();
+        for (Game g :  games) {
+           Float total = 0f;
+           Map<Date, Float> curSales = sales.get(g);
+           for(Date d : curSales.keySet()) {
+               total += curSales.get(d);
+           }
+           totalPerGame.put(g.getTitle(), total);
+        }
+
+        // Need to format this for use in js.
+        model.addAttribute("totalsPerGame", totalPerGame);
         model.addAttribute("gameSales", gameSales);
+
         return "admin/analytics";
     }
 
