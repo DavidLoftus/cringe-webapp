@@ -21,8 +21,12 @@
 <body>
 <div th:replace="fragments/header :: header" class="globalHeader"></div>
 <div class="mainContent">
+    <div class="banner">
+        <figure class="highcharts-figure">
+            <div id="container"></div>
+        </figure>
+    </div>
     <b class="text-center" style="color:white;">Game Sales:</b>
-
     <table class="table table-hover table-borderless">
         <thead class="thead-dark">
         <tr>
@@ -41,27 +45,36 @@
         </tr>
         </tbody>
     </table>
-    <figure class="highcharts-figure">
-        <div id="container"></div>
-    </figure>
     <script>
         /*<![CDATA[*/
+        var userID = [[${ userId }]];
         $.ajax({
             url: "analytics/totalsPerGame",
-            success: function(result){
+            type: 'GET',
+            data: { id: userID},
+            success: function (result) {
                 var formatteddata = [];
-                for(var key in result){
+                for (var key in result) {
                     var singleObject = {
                         name: key.toUpperCase(),
-                        data: [result[key]]
+                        y: result[key]
                     }
                     formatteddata.push(singleObject);
                 }
 
-                drawTotalSalesPerGame(formatteddata);
+                var pieObj = {
+                    name: 'Totals Per Game',
+                    colorByPoint: true,
+                    data: formatteddata
+                }
+
+                console.log(pieObj);
+
+                drawTotalSalesPerGame([pieObj]);
             }
         });
 
+        /*
         function drawTotalSalesPerGame(data) {
 
             Highcharts.chart('container', {
@@ -115,6 +128,63 @@
                 }
 
             }
+            );
+        }
+        */
+
+        function drawTotalSalesPerGame(data) {
+
+            Highcharts.chart('container', {
+                    chart: {
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false,
+                        type: 'pie'
+                    },
+                    title: {
+                        text: 'Total Sales Per Game'
+                    },
+
+                    yAxis: {
+                        title: {
+                            text: 'Total Sales ($)'
+                        }
+                    },
+
+                    legend: {
+                        layout: 'vertical',
+                        align: 'right',
+                        verticalAlign: 'middle'
+                    },
+
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                            }
+                        }
+                    },
+
+                    series: data,
+
+                    responsive: {
+                        rules: [{
+                            condition: {
+                                maxWidth: 500
+                            },
+                            chartOptions: {
+                                legend: {
+                                    layout: 'horizontal',
+                                    align: 'center',
+                                    verticalAlign: 'bottom'
+                                }
+                            }
+                        }]
+                    }
+                }
             );
         }
 

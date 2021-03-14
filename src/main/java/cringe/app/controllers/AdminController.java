@@ -193,6 +193,7 @@ public class AdminController {
 
         // Need to format this for use in js.
         model.addAttribute("totalsPerGame", totalPerGame);
+        model.addAttribute("userId", user.getId());
         model.addAttribute("gameSales", gameSales);
 
         return "admin/analytics";
@@ -200,8 +201,14 @@ public class AdminController {
 
 
     @RequestMapping("/analytics/totalsPerGame")
-    public ResponseEntity<?> getTotalsPerGame() {
-        List<Game> games = gameRepository.findAll();
+    public ResponseEntity<?> getTotalsPerGame(@RequestParam("id") long userId) {
+        System.out.println("User id: " + userId);
+        User user = userRepository.findById(userId).get();
+        List<Game> games = new ArrayList<>(user.getGames());
+
+        if(user.hasRole("root")) {
+            games = gameRepository.findAll();
+        }
 
         Map<Game, Map<Date, Float>> sales = new HashMap<>();
         for (Game g : games) {
@@ -222,17 +229,29 @@ public class AdminController {
             sales.put(g, salesForGame);
         }
 
+
         Map<String, Float> totalPerGame = new HashMap<>();
+        Float totalPie = 0f;
         for (Game g :  games) {
             Float total = 0f;
             Map<Date, Float> curSales = sales.get(g);
             for(Date d : curSales.keySet()) {
                 total += curSales.get(d);
             }
+            totalPie += total;
             totalPerGame.put(g.getTitle(), total);
         }
 
         System.out.println("REST Query: " + totalPerGame);
+
+        if(totalPie > 0.0) {
+            for (Game g : games) {
+                System.out.println("Total pie: " + totalPie);
+                System.out.println("Game title: " + g.getTitle());
+                System.out.println("Game total: " + totalPerGame.get(g.getTitle()));
+                totalPerGame.put(g.getTitle(), (totalPerGame.get(g.getTitle()) / totalPie));
+            }
+        }
 
         return new ResponseEntity<>(totalPerGame, HttpStatus.OK);
     }
