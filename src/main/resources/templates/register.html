@@ -40,34 +40,36 @@
     </div>
 </div>
 <div class="mainContent">
-    <div class="container">
-        <form method="POST" class="form-signin" th:object="${userForm}" th:action="@{/register}">
-            <h2 class="form-signin-heading">Create your CringeGames account</h2>
-            <div class="form-group">
-                <input type="text" th:field="*{username}" class="form-control" placeholder="Username"
-                       autofocus="true">
-                <span class="has-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
-            </div>
-            <div class="form-group">
-                <input type="text" th:field="*{fullName}" class="form-control" placeholder="Full name"/>
-                <span class="has-error" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></span>
-            </div>
-            <div class="form-group">
-                <input type="text" th:field="*{email}" class="form-control" placeholder="Email"/>
-                <span class="has-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
-            </div>
-            <div class="form-group">
-                <input type="password" th:field="*{password}" class="form-control" placeholder="Password">
-                <span class="has-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
-            </div>
-            <div class="form-group">
-                <input type="password" th:field="*{passwordConfirm}" class="form-control"
-                       placeholder="Confirm your password">
-                <span class="has-error" th:if="${#fields.hasErrors('passwordConfirm')}"
-                      th:errors="*{passwordConfirm}"></span>
-            </div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
-        </form>
+    <div class="content">
+        <div class="login-area">
+            <form method="POST" class="form-signin" th:object="${userForm}" th:action="@{/register}">
+                <h2 class="form-signin-heading">Create your CringeGames account</h2>
+                <div class="form-group">
+                    <input type="text" th:field="*{username}" class="form-control form-box" placeholder="Username"
+                           autofocus="true">
+                    <span class="has-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+                </div>
+                <div class="form-group">
+                    <input type="text" th:field="*{fullName}" class="form-control form-box" placeholder="Full name"/>
+                    <span class="has-error" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></span>
+                </div>
+                <div class="form-group">
+                    <input type="text" th:field="*{email}" class="form-control form-box" placeholder="Email"/>
+                    <span class="has-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                </div>
+                <div class="form-group">
+                    <input type="password" th:field="*{password}" class="form-control form-box" placeholder="Password">
+                    <span class="has-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+                </div>
+                <div class="form-group">
+                    <input type="password" th:field="*{passwordConfirm}" class="form-control form-box"
+                           placeholder="Confirm your password">
+                    <span class="has-error" th:if="${#fields.hasErrors('passwordConfirm')}"
+                          th:errors="*{passwordConfirm}"></span>
+                </div>
+                <button class="btn btn-primary btn-block" type="submit">Submit</button>
+            </form>
+        </div>
     </div>
 </div>
 </body>
