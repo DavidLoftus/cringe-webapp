@@ -39,6 +39,10 @@ public class RootController {
             roles.add(newRole);
         }
         user.setRoles(roles);
+        for(Role r: user.getRoles())
+        {
+            System.out.println(r.getName());
+        }
         userRepository.save(user);
     }
 }

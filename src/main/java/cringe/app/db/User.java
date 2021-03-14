@@ -35,6 +35,9 @@ public class User {
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Game> games;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<Game> gamesSold;
+
     public long getId() {
         return id;
     }
@@ -105,6 +108,14 @@ public class User {
 
     public void setGames(Set<Game> games) {
         this.games = games;
+    }
+
+    public Set<Game> getGamesSold() {
+        return gamesSold;
+    }
+
+    public void setGamesSold(Set<Game> gamesSold) {
+        this.gamesSold = gamesSold;
     }
 
     public boolean hasRole(String roleName) {

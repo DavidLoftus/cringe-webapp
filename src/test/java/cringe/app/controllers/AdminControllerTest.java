@@ -13,7 +13,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.security.Principal;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,10 +32,24 @@ class AdminControllerTest {
     private GameRepository gameRepository;
 
     @Mock
+    private UserRepository userRepository;
+
+    @Mock
     private ArtifactRepository artifactRepository;
 
     @Test
     void newGame() {
+        Principal principal = () -> "bob";
+
+        User bob = new User();
+        bob.setId(1);
+        bob.setRoles(Collections.emptySet());
+
+        Cart cart = new Cart();
+        cart.setId(1);
+        cart.setGames(new ArrayList<>());
+
+        bob.setCart(cart);
         final Game game = new Game();
         game.setId(1);
         game.setTitle("Doom");
@@ -42,7 +59,9 @@ class AdminControllerTest {
                         argThat(x -> x.getTitle().equals(game.getTitle())))
         ).thenReturn(game);
 
-        var ret = adminController.newGame(game.getTitle());
+        when(userRepository.findByUsername("bob")).thenReturn(bob);
+
+        var ret = adminController.newGame(principal, game.getTitle());
         assertEquals("/admin/game/1", ret.getUrl());
 
         verify(gameRepository, times(1)).save(any());

@@ -45,18 +45,22 @@ public class AdminController {
         if(user.hasRole("root")) {
             model.addAttribute("games", gameRepository.findAll());
         } else {
-            model.addAttribute("games", gameRepository.findAll());
-            // TODO: Change: Non root users can only edit the games they sell.
-           //  model.addAttribute("games", user.getGames());
+            model.addAttribute("games", user.getGamesSold());
         }
         return "admin/index.html";
     }
 
     @PostMapping("/new_game")
-    public RedirectView newGame(@RequestParam String title) {
+    public RedirectView newGame(Principal principal, @RequestParam String title) {
         Game game = new Game();
         game.setTitle(title);
         game = gameRepository.save(game);
+
+        User user = userRepository.findByUsername(principal.getName());
+        Set<Game> gamesSold = user.getGamesSold();
+        gamesSold.add(game);
+        user.setGamesSold(gamesSold);
+        userRepository.save(user);
 
         return new RedirectView("/admin/game/" + game.getId());
     }
@@ -134,7 +138,7 @@ public class AdminController {
         if(user.hasRole("root")) {
             orders = orderRepository.findAll(Sort.by(Sort.Direction.ASC, "status"));
         } else{
-            for (Game g : user.getGames()) {
+            for (Game g : user.getGamesSold()) {
                 orders.addAll(orderRepository.findOrdersByGameId(g.getId()));
             }
         }
@@ -143,14 +147,14 @@ public class AdminController {
         return "admin/orders";
     }
 
-
-    // Could make a JSON endpoint
-
     @GetMapping("/analytics")
     public String analytics(Principal principal, Model model) {
         User user = userRepository.findByUsername(principal.getName());
+        List<Game> games = new ArrayList<>(user.getGamesSold());
 
-        List<Game> games = gameRepository.findAll();
+        if(user.hasRole("root")) {
+            games = gameRepository.findAll();
+        }
 
         List<GameSale> gameSales = new ArrayList<>();
         for (Game g : games) {
@@ -161,38 +165,6 @@ public class AdminController {
             gameSales.add(new GameSale(g, total));
         }
 
-        Map<Game, Map<Date, Float>> sales = new HashMap<>();
-        for (Game g : games) {
-            Map<Date, Float> salesForGame = new HashMap<>();
-            List<Order> orders = orderRepository.findOrdersByGameId(g.getId());
-            for(Order o : orders) {
-                for(Purchase p : o.getPurchases()) {
-                    if(p.getGame() == g) {
-                        if(sales.containsKey(o.getDate())){
-                            Float cur = salesForGame.get(o.getDate());
-                            salesForGame.put(o.getDate(), cur + p.getPrice());
-                        } else {
-                            salesForGame.put(o.getDate(), p.getPrice());
-                        }
-                    }
-                }
-            }
-            sales.put(g, salesForGame);
-        }
-        System.out.println(sales);
-
-        Map<String, Float> totalPerGame = new HashMap<>();
-        for (Game g :  games) {
-           Float total = 0f;
-           Map<Date, Float> curSales = sales.get(g);
-           for(Date d : curSales.keySet()) {
-               total += curSales.get(d);
-           }
-           totalPerGame.put("'" + g.getTitle() + "'", total);
-        }
-
-        // Need to format this for use in js.
-        model.addAttribute("totalsPerGame", totalPerGame);
         model.addAttribute("userId", user.getId());
         model.addAttribute("gameSales", gameSales);
 
@@ -202,9 +174,8 @@ public class AdminController {
 
     @RequestMapping("/analytics/totalsPerGame")
     public ResponseEntity<?> getTotalsPerGame(@RequestParam("id") long userId) {
-        System.out.println("User id: " + userId);
         User user = userRepository.findById(userId).get();
-        List<Game> games = new ArrayList<>(user.getGames());
+        List<Game> games = new ArrayList<>(user.getGamesSold());
 
         if(user.hasRole("root")) {
             games = gameRepository.findAll();
@@ -246,9 +217,6 @@ public class AdminController {
 
         if(totalPie > 0.0) {
             for (Game g : games) {
-                System.out.println("Total pie: " + totalPie);
-                System.out.println("Game title: " + g.getTitle());
-                System.out.println("Game total: " + totalPerGame.get(g.getTitle()));
                 totalPerGame.put(g.getTitle(), (totalPerGame.get(g.getTitle()) / totalPie));
             }
         }
