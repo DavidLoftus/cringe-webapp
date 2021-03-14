@@ -108,10 +108,11 @@ body {
 }
 
 .game-price-column {
-    background-color: cyan;
+    background-color: #00cccc;
     width: 30%;
     text-align: center;
-    opacity: 50%;
+    opacity: 70%;
+    color: #ffffff;
 }
 
 .navbarContent {

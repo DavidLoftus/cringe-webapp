@@ -13,34 +13,37 @@
 <body>
 <div th:replace="fragments/header :: header" class="globalHeader"></div>
 <div class="px-3 mainContent text-center justify-content-center align-items-center">
-    <h2 class="text-center" style="color:white;">Users:</h2>
-    <br>
-    <table class="table table-hover table-striped table-bordered">
-        <thead class="thead-dark">
-        <tr>
-            <th scope="col">User</th>
-            <th scope="col">Root</th>
-            <th scope="col">Admin</th>
-            <th scope="col">Update Role</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:id="|user_row_${user.id}|" th:each="user : ${ users }">
-            <td class="align-middle text-center" th:id="|user_name_${user.id}|" th:text="${user.username}"></td>
-            <td class="align-middle text-center">
-                <input type="checkbox" th:id="|user_isRoot_${user.id}|" name="isRoot" value="isRoot" th:checked="${user.hasRole('root')}">
-                <label th:for="|user_isRoot_${user.id}|">Root</label>
-            </td>
-            <td class="align-middle text-center">
-                <input type="checkbox" th:id="|user_isAdmin_${user.id}|" name="isAdmin" value="isAdmin" th:checked="${user.hasRole('admin')}">
-                <label th:for="|user_isAdmin_${user.id}|">Admin</label>
-            </td>
-            <td class="align-middle text-center">
-                <button type="button" class="btn btn-danger" th:onclick="|updateRole(${ user.id }, ${ user.hasRole('root')}, ${ user.hasRole('admin')})|">Update</button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="content">
+
+        <h2 class="text-center" style="color:white;">Users:</h2>
+        <br>
+        <table class="table table-hover table-striped table-bordered">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">User</th>
+                <th scope="col">Root</th>
+                <th scope="col">Admin</th>
+                <th scope="col">Update Role</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:id="|user_row_${user.id}|" th:each="user : ${ users }">
+                <td class="align-middle text-center" th:id="|user_name_${user.id}|" th:text="${user.username}"></td>
+                <td class="align-middle text-center">
+                    <input type="checkbox" th:id="|user_isRoot_${user.id}|" name="isRoot" value="isRoot" th:checked="${user.hasRole('root')}">
+                    <label th:for="|user_isRoot_${user.id}|">Root</label>
+                </td>
+                <td class="align-middle text-center">
+                    <input type="checkbox" th:id="|user_isAdmin_${user.id}|" name="isAdmin" value="isAdmin" th:checked="${user.hasRole('admin')}">
+                    <label th:for="|user_isAdmin_${user.id}|">Admin</label>
+                </td>
+                <td class="align-middle text-center">
+                    <button type="button" class="btn btn-danger" th:onclick="|updateRole(${ user.id }, ${ user.hasRole('root')}, ${ user.hasRole('admin')})|">Update</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 </body>
 </html>

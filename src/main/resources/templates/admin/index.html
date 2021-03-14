@@ -17,15 +17,6 @@
 <div th:replace="fragments/header :: header" class="globalHeader"></div>
 <div class="mainContent">
     <div class="content">
-        <div th:attr="onclick=|window.location = '${#paths.edit(game)}';|" th:each="game : ${ games }" class="game" th:style="|background-image: url(${#paths.get(game.icon)});|">
-            <div class="game-bottom-bar">
-                <div class="game-title-column" th:text="${game.title}">
-                </div>
-                <div class="game-price-column">
-                    Edit
-                </div>
-            </div>
-        </div>
         <div class="game" style="background-image: url(/images/circle+plus+icon.png);">
             <form id="new-form" action="/admin/new_game" method="post">
                 <div class="game-bottom-bar">
@@ -37,6 +28,35 @@
                     </div>
                 </div>
             </form>
+        </div>
+        <div class="game" style="background-image: url(/images/orders-icon.png);">
+            <form id="orders-form" action="/admin/orders" method="get">
+                <div class="game-bottom-bar">
+                    <div class="game-title-column">Orders</div>
+                    <div class="game-price-column" onclick="document.forms['orders-form'].submit()">
+                        View
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="game" style="background-image: url(/images/analytics-icon.png);">
+            <form id="analytics-form" action="/admin/orders" method="get">
+                <div class="game-bottom-bar">
+                    <div class="game-title-column">Analytics</div>
+                    <div class="game-price-column" onclick="document.forms['analytics-form'].submit()">
+                        View
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div th:attr="onclick=|window.location = '${#paths.edit(game)}';|" th:each="game : ${ games }" class="game" th:style="|background-image: url(${#paths.get(game.icon)});|">
+            <div class="game-bottom-bar">
+                <div class="game-title-column" th:text="${game.title}">
+                </div>
+                <div class="game-price-column">
+                    Edit
+                </div>
+            </div>
         </div>
     </div>
 </div>

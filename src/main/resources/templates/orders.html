@@ -55,7 +55,7 @@
                 <td th:id="|order_status_${order.id}|" th:text="${order.status}"></td>
                 </td>
                 <td>
-                    <button type="button" th:onclick="|refund(${ order.id })|">Refund</button>
+                    <button type="button" class="btn btn-primary btn-block" th:onclick="|refund(${ order.id })|">Refund</button>
                 </td>
             </tr>
             </tbody>
