@@ -6,6 +6,7 @@ import cringe.app.util.UploadType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -142,6 +143,9 @@ public class AdminController {
         return "admin/orders";
     }
 
+
+    // Could make a JSON endpoint
+
     @GetMapping("/analytics")
     public String analytics(Principal principal, Model model) {
         User user = userRepository.findByUsername(principal.getName());
@@ -184,7 +188,7 @@ public class AdminController {
            for(Date d : curSales.keySet()) {
                total += curSales.get(d);
            }
-           totalPerGame.put(g.getTitle(), total);
+           totalPerGame.put("'" + g.getTitle() + "'", total);
         }
 
         // Need to format this for use in js.
@@ -194,6 +198,44 @@ public class AdminController {
         return "admin/analytics";
     }
 
+
+    @RequestMapping("/analytics/totalsPerGame")
+    public ResponseEntity<?> getTotalsPerGame() {
+        List<Game> games = gameRepository.findAll();
+
+        Map<Game, Map<Date, Float>> sales = new HashMap<>();
+        for (Game g : games) {
+            Map<Date, Float> salesForGame = new HashMap<>();
+            List<Order> orders = orderRepository.findOrdersByGameId(g.getId());
+            for(Order o : orders) {
+                for(Purchase p : o.getPurchases()) {
+                    if(p.getGame() == g) {
+                        if(sales.containsKey(o.getDate())){
+                            Float cur = salesForGame.get(o.getDate());
+                            salesForGame.put(o.getDate(), cur + p.getPrice());
+                        } else {
+                            salesForGame.put(o.getDate(), p.getPrice());
+                        }
+                    }
+                }
+            }
+            sales.put(g, salesForGame);
+        }
+
+        Map<String, Float> totalPerGame = new HashMap<>();
+        for (Game g :  games) {
+            Float total = 0f;
+            Map<Date, Float> curSales = sales.get(g);
+            for(Date d : curSales.keySet()) {
+                total += curSales.get(d);
+            }
+            totalPerGame.put(g.getTitle(), total);
+        }
+
+        System.out.println("REST Query: " + totalPerGame);
+
+        return new ResponseEntity<>(totalPerGame, HttpStatus.OK);
+    }
 
     @PostMapping("/refundOrder")
     @ResponseStatus(value = HttpStatus.OK)

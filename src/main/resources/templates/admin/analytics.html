@@ -46,66 +46,77 @@
     </figure>
     <script>
         /*<![CDATA[*/
-        var formatteddata = [];
-        var result = [[${totalsPerGame}]];
-        for(var key in result){
-            var singleObject = {
-                name: key.toUpperCase(),
-                data: [result[key]]
-            }
-            formatteddata.push(singleObject);
-        }
-        Highcharts.chart('container', {
-
-            title: {
-                text: 'Total Sales Per Game'
-            },
-
-            yAxis: {
-                title: {
-                    text: 'Total Sales ($)'
-                }
-            },
-
-            xAxis: {
-                accessibility: {
-                    rangeDescription: 'Range of Games'
-                }
-            },
-
-            legend: {
-                layout: 'vertical',
-                align: 'right',
-                verticalAlign: 'middle'
-            },
-
-            plotOptions: {
-                series: {
-                    label: {
-                        connectorAllowed: false
-                    },
-                    pointStart: 0
-                }
-            },
-
-            series: formatteddata,
-
-            responsive: {
-                rules: [{
-                    condition: {
-                        maxWidth: 500
-                    },
-                    chartOptions: {
-                        legend: {
-                            layout: 'horizontal',
-                            align: 'center',
-                            verticalAlign: 'bottom'
-                        }
+        $.ajax({
+            url: "analytics/totalsPerGame",
+            success: function(result){
+                var formatteddata = [];
+                for(var key in result){
+                    var singleObject = {
+                        name: key.toUpperCase(),
+                        data: [result[key]]
                     }
-                }]
-            }
+                    formatteddata.push(singleObject);
+                }
 
+                drawTotalSalesPerGame(formatteddata);
+            }
         });
+
+        function drawTotalSalesPerGame(data) {
+
+            Highcharts.chart('container', {
+
+                title: {
+                    text: 'Total Sales Per Game'
+                },
+
+                yAxis: {
+                    title: {
+                        text: 'Total Sales ($)'
+                    }
+                },
+
+                xAxis: {
+                    accessibility: {
+                        rangeDescription: 'Range of Games'
+                    }
+                },
+
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle'
+                },
+
+                plotOptions: {
+                    series: {
+                        label: {
+                            connectorAllowed: false
+                        },
+                        pointStart: 0
+                    }
+                },
+
+                series: data,
+
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 500
+                        },
+                        chartOptions: {
+                            legend: {
+                                layout: 'horizontal',
+                                align: 'center',
+                                verticalAlign: 'bottom'
+                            }
+                        }
+                    }]
+                }
+
+            }
+            );
+        }
 
         /*
         Highcharts.chart('container', {
