@@ -18,13 +18,10 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav mr-auto">
-                        <li sec:authorize="isAnonymous()" class="nav-item">
-                            <a class="nav-link links" href="/login">Login</a>
-                        </li>
                         <li sec:authorize="isAuthenticated()" class="nav-item">
                             <a class="nav-link links" href="/library">Library</a>
                         </li>
-                        <li sec:authorize="isAuthenticated()" class="nav-item">
+                        <li class="nav-item">
                             <a class="nav-link links" href="/cart">Cart</a>
                         </li>
                         <li sec:authorize="isAuthenticated()" class="nav-item">
@@ -33,8 +30,8 @@
                         <li sec:authorize="hasAuthority('admin')" class="nav-item">
                             <a class="nav-link links" href="/admin">Admin Portal</a>
                         </li>
-                        <li sec:authorize="hasAuthority('root')" class="nav-item">
-                            <a class="nav-link links" href="/root/users">Manage Users</a>
+                        <li sec:authorize="isAnonymous()" class="nav-item">
+                            <a class="nav-link links" href="/login">Login</a>
                         </li>
                         <li sec:authorize="isAuthenticated()" class="nav-item">
                             <a class="nav-link links" href="/logout">Logout</a>

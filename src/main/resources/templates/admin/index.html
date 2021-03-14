@@ -17,47 +17,46 @@
 <div th:replace="fragments/header :: header" class="globalHeader"></div>
 <div class="mainContent">
     <div class="content">
-        <div class="game" style="background-image: url(/images/circle+plus+icon.png);">
-            <form id="new-form" action="/admin/new_game" method="post">
+        <a href="/admin/games">
+            <div class="game" style="background-image: url(/images/games-icon.svg);">
                 <div class="game-bottom-bar">
-                    <div class="game-title-column">
-                        <input style="max-width: 100%; max-height: 75%;" type="text" name="title">
-                    </div>
-                    <div class="game-price-column" onclick="document.forms['new-form'].submit()">
-                        New
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="game" style="background-image: url(/images/orders-icon.png);">
-            <form id="orders-form" action="/admin/orders" method="get">
-                <div class="game-bottom-bar">
-                    <div class="game-title-column">Orders</div>
-                    <div class="game-price-column" onclick="document.forms['orders-form'].submit()">
-                        View
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="game" style="background-image: url(/images/analytics-icon.png);">
-            <form id="analytics-form" action="/admin/analytics" method="get">
-                <div class="game-bottom-bar">
-                    <div class="game-title-column">Analytics</div>
-                    <div class="game-price-column" onclick="document.forms['analytics-form'].submit()">
-                        View
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div th:attr="onclick=|window.location = '${#paths.edit(game)}';|" th:each="game : ${ games }" class="game" th:style="|background-image: url(${#paths.get(game.icon)});|">
-            <div class="game-bottom-bar">
-                <div class="game-title-column" th:text="${game.title}">
-                </div>
-                <div class="game-price-column">
-                    Edit
+                    <div class="game-title-column">Games</div>
+                    <!--                    <div class="game-price-column" onclick="document.forms['orders-form'].submit()">-->
+                    <!--                        View-->
+                    <!--                    </div>-->
                 </div>
             </div>
-        </div>
+        </a>
+        <a href="/admin/orders">
+            <div class="game" style="background-image: url(/images/orders-icon.png);">
+                <div class="game-bottom-bar">
+                    <div class="game-title-column">Orders</div>
+                    <!--                    <div class="game-price-column" onclick="document.forms['orders-form'].submit()">-->
+                    <!--                        View-->
+                    <!--                    </div>-->
+                </div>
+            </div>
+        </a>
+        <a href="/admin/analytics">
+            <div class="game" style="background-image: url(/images/analytics-icon.png);">
+                <div class="game-bottom-bar">
+                    <div class="game-title-column">Analytics</div>
+                    <!--                    <div class="game-price-column" onclick="document.forms['orders-form'].submit()">-->
+                    <!--                        View-->
+                    <!--                    </div>-->
+                </div>
+            </div>
+        </a>
+        <a sec:authorize="hasAuthority('root')" href="/root/users">
+            <div class="game" style="background-image: url(/images/users-icon.png);">
+                <div class="game-bottom-bar">
+                    <div class="game-title-column">Manage Users</div>
+                    <!--                    <div class="game-price-column" onclick="document.forms['orders-form'].submit()">-->
+                    <!--                        View-->
+                    <!--                    </div>-->
+                </div>
+            </div>
+        </a>
     </div>
 </div>
 

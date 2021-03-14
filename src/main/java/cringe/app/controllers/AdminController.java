@@ -40,14 +40,19 @@ public class AdminController {
     private PurchaseRepository purchaseRepository;
 
     @GetMapping
-    public String adminPortal(Principal principal, Model model) {
+    public String adminPortal() {
+        return "admin/index.html";
+    }
+
+    @GetMapping("/games")
+    public String games(Principal principal, Model model) {
         User user = userRepository.findByUsername(principal.getName());
         if(user.hasRole("root")) {
             model.addAttribute("games", gameRepository.findAll());
         } else {
             model.addAttribute("games", user.getGamesSold());
         }
-        return "admin/index.html";
+        return "admin/games.html";
     }
 
     @PostMapping("/new_game")
