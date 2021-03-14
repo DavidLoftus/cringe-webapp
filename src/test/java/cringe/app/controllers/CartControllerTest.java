@@ -1,6 +1,7 @@
 package cringe.app.controllers;
 
 import cringe.app.db.*;
+import cringe.app.service.CartService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,10 +24,7 @@ class CartControllerTest {
     private CartController cartController;
 
     @Mock
-    private CartRepository cartRepository;
-
-    @Mock
-    private UserRepository userRepository;
+    private CartService cartService;
 
     @Mock
     private GameRepository gameRepository;
@@ -35,26 +33,20 @@ class CartControllerTest {
     void addToCart() {
         Principal principal = () -> "bob";
 
-        User bob = new User();
-        bob.setId(1);
-        bob.setRoles(Collections.emptySet());
-
         Cart cart = new Cart();
         cart.setId(1);
         cart.setGames(new ArrayList<>());
-
-        bob.setCart(cart);
 
         Game game = new Game();
         game.setId(1);
         game.setTitle("Doom");
 
-        when(userRepository.findByUsername("bob")).thenReturn(bob);
+        when(cartService.getCart(any())).thenReturn(cart);
         when(gameRepository.findById(1)).thenReturn(Optional.of(game));
 
         cartController.addToCart(principal, 1);
 
-        verify(cartRepository, times(1)).save(argThat(x -> x.getGames().contains(game)));
+        verify(cartService, times(1)).saveCart(any(), argThat(x -> x.getGames().contains(game)));
     }
 
     @Test
@@ -76,11 +68,11 @@ class CartControllerTest {
 
         bob.setCart(cart);
 
-        when(userRepository.findByUsername("bob")).thenReturn(bob);
+        when(cartService.getCart(any())).thenReturn(cart);
         when(gameRepository.findById(1)).thenReturn(Optional.of(game));
 
         cartController.removeFromCart(principal, 1);
 
-        verify(cartRepository, times(1)).save(argThat(x -> x.getGames().isEmpty()));
+        verify(cartService, times(1)).saveCart(any(), argThat(x -> x.getGames().isEmpty()));
     }
 }

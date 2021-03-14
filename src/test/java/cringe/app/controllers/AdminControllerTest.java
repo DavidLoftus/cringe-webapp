@@ -17,6 +17,7 @@ import java.security.Principal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -44,6 +45,7 @@ class AdminControllerTest {
         User bob = new User();
         bob.setId(1);
         bob.setRoles(Collections.emptySet());
+        bob.setGamesSold(new HashSet<>());
 
         Cart cart = new Cart();
         cart.setId(1);
@@ -65,6 +67,7 @@ class AdminControllerTest {
         assertEquals("/admin/game/1", ret.getUrl());
 
         verify(gameRepository, times(1)).save(any());
+        verify(userRepository, times(1)).save(argThat(x -> x.getGamesSold().contains(game)));
     }
 
     @Test
