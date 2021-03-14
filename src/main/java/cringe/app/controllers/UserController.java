@@ -1,5 +1,6 @@
 package cringe.app.controllers;
 
+import cringe.app.component.SessionStore;
 import cringe.app.db.User;
 import cringe.app.db.UserRepository;
 import cringe.app.security.SecurityService;
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.context.annotation.SessionScope;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 @Controller
@@ -33,6 +36,9 @@ public class UserController {
 
     @Autowired
     private UserValidator userValidator;
+
+    @Autowired
+    private SessionStore sessionStore;
 
     @GetMapping("/register")
     public String register(Model model) {
@@ -61,14 +67,15 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String login(Principal principal, Model model, String error, String logout) {
+    public String login(@RequestHeader(value = "Referer", required = false) String referer, Principal principal, Model model, String error, String logout) {
         if (securityService.isAuthenticated()) {
-            cartService.sync(principal);
             return "redirect:/";
         }
 
         if (error != null)
             model.addAttribute("error", "Your username and password is invalid.");
+        else if (referer != null)
+            sessionStore.setLoginReferer(referer);
 
         if (logout != null)
             model.addAttribute("message", "You have been logged out successfully.");

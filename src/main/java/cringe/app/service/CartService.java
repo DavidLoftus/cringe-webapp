@@ -1,6 +1,6 @@
 package cringe.app.service;
 
-import cringe.app.component.CartStore;
+import cringe.app.component.SessionStore;
 import cringe.app.db.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,14 +26,14 @@ public class CartService {
     private PurchaseRepository purchaseRepository;
 
     @Autowired
-    private CartStore cartStore;
+    private SessionStore sessionStore;
 
     public Cart getCart(Principal principal) {
         if (principal == null) {
-            if (cartStore.getCart() == null) {
-                cartStore.setCart(new Cart());
+            if (sessionStore.getCart() == null) {
+                sessionStore.setCart(new Cart());
             }
-            return cartStore.getCart();
+            return sessionStore.getCart();
         } else {
             User user = userRepository.findByUsername(principal.getName());
             return user.getCart();
@@ -42,9 +42,8 @@ public class CartService {
 
     public void saveCart(Principal principal, Cart cart) {
         if (principal == null) {
-            cartStore.setCart(cart);
+            sessionStore.setCart(cart);
         } else {
-            User user = userRepository.findByUsername(principal.getName());
             cartRepository.save(cart);
         }
     }
@@ -79,12 +78,21 @@ public class CartService {
         cartRepository.delete(cart);
     }
 
+    private boolean hasGame(User user, int id) {
+        for (Game game : user.getGames()) {
+            if (game.getId() == id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void sync(Principal principal) {
         if (principal == null) {
             throw new NullPointerException("principal cannot be null");
         }
 
-        if (cartStore.getCart().getGames().isEmpty()) {
+        if (sessionStore.getCart() == null || sessionStore.getCart().getGames().isEmpty()) {
             return;
         }
 
@@ -93,8 +101,8 @@ public class CartService {
         List<Game> dbCartGames = dbCart.getGames();
 
         boolean dirty = false;
-        for (Game game : cartStore.getCart().getGames()) {
-            if (dbCartGames.stream().map(g -> g.getId() == game.getId()).findAny().isEmpty()) {
+        for (Game game : sessionStore.getCart().getGames()) {
+            if (!hasGame(user, game.getId())) {
                 dirty = true;
                 dbCartGames.add(game);
             }

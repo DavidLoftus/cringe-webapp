@@ -6,9 +6,11 @@ import org.springframework.web.context.annotation.SessionScope;
 
 @Component
 @SessionScope
-public class CartStore {
+public class SessionStore {
 
     private Cart cart;
+
+    private String loginReferer;
 
     public Cart getCart() {
         return cart;
@@ -16,5 +18,13 @@ public class CartStore {
 
     public void setCart(Cart cart) {
         this.cart = cart;
+    }
+
+    public String getLoginReferer() {
+        return loginReferer;
+    }
+
+    public void setLoginReferer(String loginReferer) {
+        this.loginReferer = loginReferer;
     }
 }
