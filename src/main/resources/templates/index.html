@@ -53,7 +53,7 @@
         </div>
     </div>
     <div class="content">
-        <h2> New Releases </h2>
+        <h2 class="front-page"> New Releases </h2>
         <div th:attr="onclick=|window.location = '${#paths.view(game)}';|" th:each="game : ${ games }" class="game" th:style="|background-image: url(${#paths.get(game.icon)});|">
             <div class="game-bottom-bar">
                 <div class="game-title-column" th:text="${game.title}">

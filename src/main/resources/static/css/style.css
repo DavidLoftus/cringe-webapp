@@ -54,6 +54,8 @@ body {
     float: left;
     margin: 4px 4px;
     z-index: 402;
+    cursor: pointer;
+    background-size: 100%;
 }
 
 .search-bar input {
@@ -153,4 +155,8 @@ th, tr, td {
 
 td {
     white-space: pre
+}
+
+h2.front-page {
+    padding-top: 10px;
 }
