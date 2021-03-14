@@ -15,6 +15,9 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int paymentId;
+
     @ManyToOne
     private User user;
 
@@ -76,6 +79,14 @@ public class Order {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public int getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(int paymentId) {
+        this.paymentId = paymentId;
     }
 
     public String generateReceipt() {
