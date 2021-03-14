@@ -7,10 +7,6 @@ import java.util.Set;
 @Table(name = "games")
 public class Game {
 
-    public enum Visibility {
-        RELEASED, PREORDER, PRIVATE
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -40,7 +36,7 @@ public class Game {
     private Float price;
 
     @Column
-    private Visibility visibility = Visibility.PRIVATE;
+    private GameVisibility visibility = GameVisibility.PRIVATE;
 
     @Lob
     @Column
@@ -142,11 +138,11 @@ public class Game {
         this.background = background;
     }
 
-    public Visibility getVisibility() {
+    public GameVisibility getVisibility() {
         return visibility;
     }
 
-    public void setVisibility(Visibility visibility) {
+    public void setVisibility(GameVisibility visibility) {
         this.visibility = visibility;
     }
 }

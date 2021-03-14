@@ -77,6 +77,7 @@ public class AdminController {
                            @RequestParam(required = false) String title,
                            @RequestParam(required = false) String description,
                            @RequestParam(required = false) Float price,
+                           @RequestParam(required = false) GameVisibility visibility,
                            Model model) {
         Game game = gameRepository.findGameById(id);
 
@@ -90,6 +91,10 @@ public class AdminController {
 
         if (price != null) {
             game.setPrice(price);
+        }
+
+        if (visibility != null) {
+            game.setVisibility(visibility);
         }
 
         gameRepository.save(game);

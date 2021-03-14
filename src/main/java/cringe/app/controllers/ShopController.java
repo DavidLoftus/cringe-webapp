@@ -33,7 +33,7 @@ public class ShopController {
     public UserRepository userRepository;
 
     private boolean isGameVisible(Principal principal, Game game) {
-        if (game.getVisibility() != Game.Visibility.PRIVATE) {
+        if (game.getVisibility() != GameVisibility.PRIVATE) {
             return true;
         } else if (principal != null) {
             User user = userRepository.findByUsername(principal.getName());

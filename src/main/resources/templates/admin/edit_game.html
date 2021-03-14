@@ -55,7 +55,19 @@
                     </div>
                 </div>
                 <div class="purchase">
-                    <h1></h1>
+                    <h1>Visibility:
+                        <select name="visibility" form="edit-form">
+                            <option th:if="${game.visibility == state}" selected th:each="state : ${T(cringe.app.db.GameVisibility).values()}"
+                                    th:value="${state}"
+                                    th:text="${#strings.capitalize(#strings.toLowerCase(state))}">
+                            </option>
+
+                            <option th:if="${game.visibility != state}" th:each="state : ${T(cringe.app.db.GameVisibility).values()}"
+                                    th:value="${state}"
+                                    th:text="${#strings.capitalize(#strings.toLowerCase(state))}">
+                            </option>
+                        </select>
+                    </h1>
                     <div class="lower-purchase">
                         <div class="purchase-bottom">
                             <div class="purchase-price">

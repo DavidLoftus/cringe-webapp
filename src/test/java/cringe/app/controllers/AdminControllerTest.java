@@ -94,11 +94,12 @@ class AdminControllerTest {
         updatedGame.setTitle("Doom 2");
         updatedGame.setDescription("Its doom yo");
         updatedGame.setPrice(29.99f);
+        updatedGame.setVisibility(GameVisibility.RELEASED);
 
         when(gameRepository.findGameById(1)).thenReturn(game);
 
         var model = new ExtendedModelMap();
-        var redirect = adminController.editGame(1, updatedGame.getTitle(), updatedGame.getDescription(), updatedGame.getPrice(), model);
+        var redirect = adminController.editGame(1, updatedGame.getTitle(), updatedGame.getDescription(), updatedGame.getPrice(), updatedGame.getVisibility(), model);
         assertEquals("/admin/game/1", redirect.getUrl());
 
         verify(gameRepository, times(1)).findGameById(1);
