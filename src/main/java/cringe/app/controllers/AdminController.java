@@ -148,6 +148,8 @@ public class AdminController {
             }
         }
 
+        List<Order.Status> statuses = new ArrayList<Order.Status>(Arrays.asList(Order.Status.processing, Order.Status.completed, Order.Status.refunded));
+        model.addAttribute("statuses", statuses);
         model.addAttribute("orders", orders);
         return "admin/orders";
     }
@@ -227,24 +229,6 @@ public class AdminController {
         }
 
         return new ResponseEntity<>(totalPerGame, HttpStatus.OK);
-    }
-
-    @PostMapping("/refundOrder")
-    @ResponseStatus(value = HttpStatus.OK)
-    public void refund(@RequestParam int id) {
-        Order order = orderRepository.findOrderById(id);
-        order.setStatus(Order.Status.refunded);
-
-        User user = userRepository.findByUsername(order.getUser().getUsername());
-
-        // User no longer owns these games
-        Set<Game> games = user.getGames();
-        for(Purchase p : order.getPurchases()) {
-            games.remove(p.getGame());
-        }
-
-        user.setGames(games);
-        orderRepository.updateStatus(id, Order.Status.refunded);
     }
 
 }

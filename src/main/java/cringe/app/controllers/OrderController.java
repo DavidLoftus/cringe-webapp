@@ -54,4 +54,41 @@ public class OrderController {
         orderRepository.updateStatus(id, Order.Status.refunded);
     }
 
+
+    @PostMapping("/updateOrder")
+    @ResponseStatus(value = HttpStatus.OK)
+    public void updateOrder(Principal principal, @RequestParam int id, @RequestParam String status) {
+        User user = userRepository.findByUsername(principal.getName());
+        Order.Status newStatus;
+        switch(status) {
+            case "processing":
+                newStatus = Order.Status.processing;
+                break;
+            case "completed":
+                newStatus = Order.Status.completed;
+                break;
+            case "refunded":
+                newStatus = Order.Status.refunded;
+                break;
+            default:
+                newStatus = Order.Status.processing;
+                break;
+        }
+
+        Order order = orderRepository.findOrderById(id);
+        order.setStatus(newStatus);
+
+        if(newStatus == Order.Status.refunded)
+        {
+            // User no longer owns these games
+            Set<Game> games = user.getGames();
+            for(Purchase p : order.getPurchases()) {
+                games.remove(p.getGame());
+            }
+
+            user.setGames(games);
+        }
+
+        orderRepository.updateStatus(id, newStatus);
+    }
 }
