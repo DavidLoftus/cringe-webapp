@@ -176,7 +176,7 @@ h2.front-page {
 .gallery-image img {
     width: 100%;
     height: 450px;
-    object-fit: contain;
+    object-fit: fill;
 }
 .prevButton, .nextButton {
     cursor: pointer;
