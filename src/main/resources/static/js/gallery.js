@@ -1,6 +1,6 @@
 var slideIndex = 1;
 showSlides(slideIndex);
-
+autoSlides();
 function changeSlides(n) {
     showSlides(slideIndex += n);
 }
@@ -19,4 +19,9 @@ function showSlides(n) {
         slides[i].style.display = "none";
     }
     slides[slideIndex-1].style.display = "block";
+}
+
+function autoSlides(){
+    showSlides(slideIndex += 1);
+    setTimeout(autoSlides, 20000);
 }
