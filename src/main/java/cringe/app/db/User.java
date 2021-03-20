@@ -1,6 +1,7 @@
 package cringe.app.db;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -33,10 +34,10 @@ public class User {
     private Set<Role> roles;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    private Set<Game> games;
+    private Set<Game> games = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
-    private Set<Game> gamesSold;
+    private Set<Game> gamesSold = new HashSet<>();
 
     public long getId() {
         return id;

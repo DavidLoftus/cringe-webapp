@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -78,8 +79,8 @@ public class CartService {
         cartRepository.delete(cart);
     }
 
-    private boolean hasGame(User user, int id) {
-        for (Game game : user.getGames()) {
+    private boolean hasGame(Collection<Game> games, int id) {
+        for (Game game : games) {
             if (game.getId() == id) {
                 return true;
             }
@@ -102,7 +103,7 @@ public class CartService {
 
         boolean dirty = false;
         for (Game game : sessionStore.getCart().getGames()) {
-            if (!hasGame(user, game.getId())) {
+            if (!hasGame(user.getGames(), game.getId()) && !hasGame(dbCartGames, game.getId())) {
                 dirty = true;
                 dbCartGames.add(game);
             }
@@ -111,8 +112,6 @@ public class CartService {
         if (dirty) {
             cartRepository.save(dbCart);
         }
-
-
     }
 
 }
