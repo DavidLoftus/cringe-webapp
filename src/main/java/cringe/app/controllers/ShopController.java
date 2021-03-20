@@ -17,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,9 @@ public class ShopController {
     @Autowired
     public UserRepository userRepository;
 
+    @Autowired
+    public OrderRepository orderRepository;
+
     private boolean isGameVisible(Principal principal, Game game) {
         if (game.getVisibility() != GameVisibility.PRIVATE) {
             return true;
@@ -46,10 +50,21 @@ public class ShopController {
         return games.stream().filter(game -> isGameVisible(principal, game)).collect(Collectors.toList());
     }
 
+    private List<Game> galleryGames(List<Game> games) {
+        return games
+                .stream()
+                .sorted(Comparator.comparingInt(g -> -orderRepository.findOrdersByGameId(g.getId()).size()))
+                .limit(3)
+                .collect(Collectors.toList());
+    }
+
     @GetMapping("/")
     public String index(Principal principal, Model model) {
         List<Game> games = gameRepository.findAll();
-        model.addAttribute("games", filterVisibleGames(principal, games));
+        List<Game> visibleGames = filterVisibleGames(principal, games);
+        List<Game> gallery = galleryGames(visibleGames);
+        model.addAttribute("games", visibleGames);
+        model.addAttribute("galleryGames", gallery);
         return "index";
     }
 

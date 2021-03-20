@@ -50,14 +50,10 @@
     <div class="banner">
         <div class="content">
             <div class="gallery">
-                <div class="gallery-image transition">
-                    <img src="/artifact/14/doom-banner.jpg" onclick="window.location = '/game/1';">
-                </div>
-                <div class="gallery-image transition">
-                    <img src="/artifact/9/gta-banner.jpg" onclick="window.location = '/game/3';">
-                </div>
-                <div class="gallery-image transition">
-                    <img src="/artifact/17/cod-banner.jpg" onclick="window.location = '/game/4';">
+                <div class="gallery-image transition" th:each="game : ${ galleryGames }">
+                    <a th:href="${#paths.view(game)}">
+                        <img th:src="${#paths.get(game.banner)}">
+                    </a>
                 </div>
 
                 <a class="prevButton" onclick="changeSlides(-1)">&#10094;</a>
