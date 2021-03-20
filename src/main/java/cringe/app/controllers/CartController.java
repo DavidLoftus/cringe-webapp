@@ -15,6 +15,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -60,15 +61,23 @@ public class CartController {
         Cart cart = cartService.getCart(principal);
 
         Optional<Game> maybeGame = gameRepository.findById(id);
-
         if (maybeGame.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
-        Game game = maybeGame.get();
-        if (cart.getGames().remove(game)) {
+        if (removeGame(cart.getGames(), id)) {
             cartService.saveCart(principal, cart);
         }
+    }
+
+    private boolean removeGame(List<Game> games, int id) {
+        for (int i = 0; i < games.size(); i++) {
+            if (games.get(i).getId() == id) {
+                games.remove(i);
+                return true;
+            }
+        }
+        return false;
     }
 
     @GetMapping("/checkout")
